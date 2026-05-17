@@ -1,0 +1,494 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Theme Config ───────────────────────── */
+@theme {
+  --color-espresso: #4a3428;
+  --color-espresso-light: #6b4c3b;
+  --color-beige: #f3e9e2;
+  --color-ivory: #faf7f4;
+  --color-cream: #d9c2b0;
+  --color-cream-dark: #c4a88e;
+  --color-matte: #171717;
+  --color-matte-soft: #2a2a2a;
+
+  --font-family-cormorant: "Cormorant Garamond", "Georgia", serif;
+  --font-family-bodoni: "Bodoni Moda", "Georgia", serif;
+  --font-family-inter: "Inter", system-ui, sans-serif;
+  --font-family-manrope: "Manrope", system-ui, sans-serif;
+
+  --radius-card: 16px;
+  --radius-full: 9999px;
+}
+
+/* ─── CSS Custom Properties ──────────────────────────── */
+:root {
+  --espresso: #4a3428;
+  --espresso-light: #6b4c3b;
+  --beige: #f3e9e2;
+  --ivory: #faf7f4;
+  --cream: #d9c2b0;
+  --cream-dark: #c4a88e;
+  --matte: #171717;
+  --matte-soft: #2a2a2a;
+
+  --font-cormorant: "Cormorant Garamond", "Georgia", serif;
+  --font-bodoni: "Bodoni Moda", "Georgia", serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-manrope: "Manrope", system-ui, sans-serif;
+
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Base Reset ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  position: relative;
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  position: relative;
+  background-color: var(--ivory);
+  color: var(--matte);
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+}
+
+/* ─── Selection ─────────────────────────────────────── */
+::selection {
+  background: var(--espresso);
+  color: var(--ivory);
+}
+
+/* ─── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cream);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--espresso);
+}
+
+/* ─── Grain Overlay ─────────────────────────────────── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+}
+
+/* ─── Font Utilities ─────────────────────────────────── */
+.font-cormorant {
+  font-family: var(--font-cormorant) !important;
+}
+.font-bodoni {
+  font-family: var(--font-bodoni) !important;
+}
+.font-inter {
+  font-family: var(--font-inter) !important;
+}
+.font-manrope {
+  font-family: var(--font-manrope) !important;
+}
+
+/* ─── Color Utilities ────────────────────────────────── */
+.text-espresso { color: var(--espresso) !important; }
+.text-espresso-light { color: var(--espresso-light) !important; }
+.text-beige { color: var(--beige) !important; }
+.text-ivory { color: var(--ivory) !important; }
+.text-cream { color: var(--cream) !important; }
+.text-cream-dark { color: var(--cream-dark) !important; }
+.text-matte { color: var(--matte) !important; }
+
+.bg-espresso { background-color: var(--espresso) !important; }
+.bg-espresso-light { background-color: var(--espresso-light) !important; }
+.bg-beige { background-color: var(--beige) !important; }
+.bg-ivory { background-color: var(--ivory) !important; }
+.bg-cream { background-color: var(--cream) !important; }
+.bg-cream-dark { background-color: var(--cream-dark) !important; }
+.bg-matte { background-color: var(--matte) !important; }
+.bg-matte-soft { background-color: var(--matte-soft) !important; }
+
+.border-espresso { border-color: var(--espresso) !important; }
+.border-cream { border-color: var(--cream) !important; }
+.border-cream-dark { border-color: var(--cream-dark) !important; }
+.border-ivory { border-color: var(--ivory) !important; }
+
+/* ─── Fluid Typography ───────────────────────────────── */
+.text-fluid-hero {
+  font-size: clamp(3.5rem, 14vw, 11rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.text-fluid-display {
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.text-fluid-xl {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.text-fluid-lg {
+  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.text-fluid-md {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.4;
+}
+.text-fluid-sm {
+  font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ─── Paper Texture ─────────────────────────────────── */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+}
+
+/* ─── Tape Accent ────────────────────────────────────── */
+.tape::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 60px;
+  height: 22px;
+  background: rgba(217, 194, 176, 0.65);
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(74, 52, 40, 0.12);
+}
+
+/* ─── Custom Cursor ──────────────────────────────────── */
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--espresso);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition:
+    transform 0.15s var(--ease-cinematic),
+    opacity 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--espresso);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition:
+    transform 0.5s var(--ease-cinematic),
+    width 0.3s var(--ease-cinematic),
+    height 0.3s var(--ease-cinematic),
+    opacity 0.3s ease;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+}
+
+/* ─── Scroll Snap ────────────────────────────────────── */
+.snap-container {
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+}
+
+.snap-item {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ─── Masonry Layout ─────────────────────────────────── */
+.masonry-grid {
+  columns: 2;
+  column-gap: 16px !important;
+}
+
+@media (min-width: 768px) {
+  .masonry-grid {
+    columns: 3;
+    column-gap: 24px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-grid {
+    columns: 4;
+    column-gap: 24px !important;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 16px !important;
+}
+
+@media (min-width: 768px) {
+  .masonry-item {
+    margin-bottom: 24px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-item {
+    margin-bottom: 24px !important;
+  }
+}
+
+/* ─── GPU Acceleration ───────────────────────────────── */
+.gpu {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ─── Section Spacing ─────────────────────────────────── */
+.section-pad {
+  padding-top: 72px !important;
+  padding-bottom: 72px !important;
+}
+@media (min-width: 768px) {
+  .section-pad {
+    padding-top: 96px !important;
+    padding-bottom: 96px !important;
+  }
+}
+@media (min-width: 1024px) {
+  .section-pad {
+    padding-top: 140px !important;
+    padding-bottom: 140px !important;
+  }
+}
+
+/* ─── Spacing Scale Utilities ────────────────────────── */
+.gap-8px { gap: 8px !important; }
+.gap-12px { gap: 12px !important; }
+.gap-16px { gap: 16px !important; }
+.gap-24px { gap: 24px !important; }
+.gap-32px { gap: 32px !important; }
+.gap-48px { gap: 48px !important; }
+.gap-72px { gap: 72px !important; }
+.gap-96px { gap: 96px !important; }
+
+.mt-8px { margin-top: 8px !important; }
+.mt-16px { margin-top: 16px !important; }
+.mt-24px { margin-top: 24px !important; }
+.mt-32px { margin-top: 32px !important; }
+.mt-48px { margin-top: 48px !important; }
+.mt-72px { margin-top: 72px !important; }
+.mt-96px { margin-top: 96px !important; }
+.mt-140px { margin-top: 140px !important; }
+
+.mb-8px { margin-bottom: 8px !important; }
+.mb-16px { margin-bottom: 16px !important; }
+.mb-24px { margin-bottom: 24px !important; }
+.mb-32px { margin-bottom: 32px !important; }
+.mb-48px { margin-bottom: 48px !important; }
+.mb-72px { margin-bottom: 72px !important; }
+.mb-96px { margin-bottom: 96px !important; }
+.mb-140px { margin-bottom: 140px !important; }
+
+.p-8px { padding: 8px !important; }
+.p-16px { padding: 16px !important; }
+.p-24px { padding: 24px !important; }
+.p-32px { padding: 32px !important; }
+.p-48px { padding: 48px !important; }
+
+.px-8px { padding-left: 8px !important; padding-right: 8px !important; }
+.px-12px { padding-left: 12px !important; padding-right: 12px !important; }
+.px-16px { padding-left: 16px !important; padding-right: 16px !important; }
+.px-24px { padding-left: 24px !important; padding-right: 24px !important; }
+
+.py-4px { padding-top: 4px !important; padding-bottom: 4px !important; }
+.py-8px { padding-top: 8px !important; padding-bottom: 8px !important; }
+.py-12px { padding-top: 12px !important; padding-bottom: 12px !important; }
+
+.pt-8px { padding-top: 8px !important; }
+.pt-16px { padding-top: 16px !important; }
+.pt-24px { padding-top: 24px !important; }
+.pt-32px { padding-top: 32px !important; }
+.pt-48px { padding-top: 48px !important; }
+.pt-72px { padding-top: 72px !important; }
+.pt-96px { padding-top: 96px !important; }
+.pt-140px { padding-top: 140px !important; }
+
+.pb-0px { padding-bottom: 0px !important; }
+.pb-8px { padding-bottom: 8px !important; }
+.pb-16px { padding-bottom: 16px !important; }
+.pb-24px { padding-bottom: 24px !important; }
+.pb-32px { padding-bottom: 32px !important; }
+.pb-48px { padding-bottom: 48px !important; }
+.pb-72px { padding-bottom: 72px !important; }
+.pb-96px { padding-bottom: 96px !important; }
+.pb-140px { padding-bottom: 140px !important; }
+
+/* ─── Grid Alignment System ──────────────────────────── */
+.editorial-container {
+  width: 100%;
+  max-width: 1280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+@media (min-width: 768px) {
+  .editorial-container {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .editorial-container {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+}
+
+/* ─── Editorial Card (Tactile, Layered Depth) ────────── */
+.editorial-card {
+  position: relative;
+  background-color: rgba(250, 247, 244, 0.85) !important;
+  backdrop-filter: blur(24px) saturate(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(110%);
+  border: 1px solid rgba(217, 194, 176, 0.45) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 8px -2px rgba(74, 52, 40, 0.03),
+    0 12px 24px -4px rgba(74, 52, 40, 0.05),
+    0 32px 64px -12px rgba(74, 52, 40, 0.08) !important;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.editorial-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.035'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  mix-blend-mode: overlay;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.editorial-card:hover {
+  transform: translateY(-8px) scale(1.008) !important;
+  border-color: rgba(74, 52, 40, 0.35) !important;
+  box-shadow: 
+    0 12px 20px -4px rgba(74, 52, 40, 0.06),
+    0 32px 48px -8px rgba(74, 52, 40, 0.08),
+    0 60px 100px -16px rgba(74, 52, 40, 0.18) !important;
+}
+
+/* Dark Editorial Card for Dark Sections */
+.editorial-card-dark {
+  position: relative;
+  background-color: rgba(26, 26, 26, 0.65) !important;
+  backdrop-filter: blur(24px) saturate(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(110%);
+  border: 1px solid rgba(217, 194, 176, 0.16) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px -2px rgba(0, 0, 0, 0.3),
+    0 16px 32px -8px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.editorial-card-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  mix-blend-mode: overlay;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+.editorial-card-dark:hover {
+  transform: translateY(-8px) scale(1.008) !important;
+  border-color: rgba(217, 194, 176, 0.35) !important;
+  box-shadow: 
+    0 12px 24px -4px rgba(0, 0, 0, 0.4),
+    0 40px 80px -12px rgba(74, 52, 40, 0.3) !important;
+}
+
+/* ─── Luxury Dark Atmosphere (Perfume Campaign Style) ── */
+.luxury-dark-section {
+  position: relative;
+  background-color: #121212 !important;
+}
+
+.luxury-dark-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, rgba(74, 52, 40, 0.15) 0%, rgba(18, 18, 18, 0.95) 75%, #121212 100%) !important;
+  z-index: 1;
+}
+
+.luxury-dark-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Reduced Motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
