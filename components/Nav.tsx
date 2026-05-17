@@ -43,8 +43,8 @@ export default function Nav() {
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "py-4 shadow-[0_4px_30px_rgba(74,52,40,0.06)] border-b"
-            : "py-6 sm:py-8"
+            ? "py-3 sm:py-4 shadow-[0_4px_30px_rgba(74,52,40,0.06)] border-b"
+            : "py-4 sm:py-6 md:py-8"
         }`}
         style={{
           backgroundColor: scrolled
@@ -61,13 +61,13 @@ export default function Nav() {
           {/* Brand Wordmark Logo */}
           <button
             onClick={() => handleNavClick("#hero")}
-            className="flex flex-col items-start gap-0.5 text-left group cursor-pointer focus:outline-none"
+            className="flex flex-col items-start gap-0.5 text-left group cursor-pointer focus:outline-none min-w-0"
             aria-label="Go to top"
           >
-            <span className="font-cormorant font-bold italic text-lg sm:text-xl tracking-wider text-espresso transition-colors duration-300 group-hover:text-espresso-light">
+            <span className="font-cormorant font-bold italic text-base sm:text-xl tracking-wider text-espresso transition-colors duration-300 group-hover:text-espresso-light whitespace-nowrap">
               N. NASSAR
             </span>
-            <span className="font-manrope text-[7px] sm:text-[8px] font-bold tracking-[0.25em] text-espresso/50 transition-colors duration-300 group-hover:text-espresso-light/70 uppercase">
+            <span className="font-manrope text-[7px] sm:text-[8px] font-bold tracking-[0.25em] text-espresso/50 transition-colors duration-300 group-hover:text-espresso-light/70 uppercase whitespace-nowrap">
               DIGITAL STRATEGIST
             </span>
           </button>
@@ -103,7 +103,7 @@ export default function Nav() {
           </nav>
 
           {/* Right Action Elements */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Desktop CTA Button */}
             <button
               onClick={() => handleNavClick("#contact")}

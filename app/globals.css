@@ -66,7 +66,7 @@ body {
   cursor: none;
 }
 
-@media (max-width: 768px) {
+@media (hover: none), (max-width: 768px) {
   body {
     cursor: auto;
   }
@@ -143,29 +143,30 @@ body {
 .border-ivory { border-color: var(--ivory) !important; }
 
 /* ─── Fluid Typography ───────────────────────────────── */
+/* Floors tuned for ≥320px viewports so headings never overflow the editorial-container */
 .text-fluid-hero {
-  font-size: clamp(3.5rem, 14vw, 11rem);
-  line-height: 0.92;
+  font-size: clamp(2.6rem, 13vw, 11rem);
+  line-height: 0.94;
   letter-spacing: -0.02em;
 }
 .text-fluid-display {
-  font-size: clamp(2.8rem, 8vw, 7rem);
-  line-height: 0.95;
+  font-size: clamp(2.1rem, 8vw, 7rem);
+  line-height: 1;
   letter-spacing: -0.02em;
 }
 .text-fluid-xl {
-  font-size: clamp(2rem, 5vw, 4.5rem);
-  line-height: 1.05;
+  font-size: clamp(1.65rem, 5.2vw, 4.5rem);
+  line-height: 1.08;
   letter-spacing: -0.015em;
 }
 .text-fluid-lg {
-  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
-  line-height: 1.15;
+  font-size: clamp(1.3rem, 3.6vw, 2.8rem);
+  line-height: 1.18;
   letter-spacing: -0.01em;
 }
 .text-fluid-md {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  line-height: 1.4;
+  font-size: clamp(1rem, 2.1vw, 1.5rem);
+  line-height: 1.45;
 }
 .text-fluid-sm {
   font-size: clamp(0.7rem, 1.2vw, 0.85rem);
@@ -479,6 +480,22 @@ body {
 .luxury-dark-content {
   position: relative;
   z-index: 2;
+}
+
+/* ─── Mobile Safeguards ──────────────────────────────── */
+/* Prevent layered absolute decorations (blur orbs, particles) from causing
+   horizontal scroll on phones. main-content already ships overflow-x: hidden
+   via the body but section-level safety keeps Lenis smooth-scroll honest. */
+section {
+  max-width: 100%;
+}
+
+/* Ensure long single-word strings (URLs, emails, etc.) never push narrow
+   containers wider than the viewport. */
+@media (max-width: 480px) {
+  a, p, h1, h2, h3, h4, span {
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ─── Reduced Motion ─────────────────────────────────── */

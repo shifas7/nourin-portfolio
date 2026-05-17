@@ -130,7 +130,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Typography Layer locked inside global editorial container */}
-      <div className="editorial-container relative z-3 flex flex-col justify-end md:justify-center min-h-screen pb-16 md:pb-0">
+      <div className="editorial-container relative z-3 flex flex-col justify-end md:justify-center min-h-screen pt-28 sm:pt-32 pb-12 md:pb-0">
         <motion.div
           style={{ y: textY }}
           variants={staggerContainer}
@@ -158,7 +158,7 @@ export default function Hero() {
           {/* Name */}
           <motion.div
             variants={nameStaggerContainer}
-            className="flex flex-nowrap mb-8px overflow-hidden"
+            className="flex flex-nowrap mb-8px overflow-hidden max-w-full"
           >
             <h1
               className="font-cormorant text-fluid-hero font-semibold leading-none tracking-[-0.03em] flex flex-nowrap whitespace-nowrap"
@@ -178,7 +178,7 @@ export default function Hero() {
           </motion.div>
           <motion.div
             variants={nameStaggerContainer}
-            className="flex flex-nowrap md:ml-[8vw] overflow-hidden"
+            className="flex flex-nowrap ml-[6vw] md:ml-[8vw] overflow-hidden max-w-full"
           >
             <div
               className="font-cormorant text-fluid-hero font-light leading-none tracking-[-0.02em] flex flex-nowrap whitespace-nowrap"
@@ -200,10 +200,10 @@ export default function Hero() {
           {/* Role */}
           <motion.p
             variants={fadeUp}
-            className="font-inter text-fluid-sm tracking-[0.15em] uppercase mt-24px"
+            className="font-inter text-fluid-sm tracking-[0.15em] uppercase mt-24px wrap-break-word"
             style={{ color: "rgba(74,52,40,0.85)" }}
           >
-            Digital Marketing Strategist &nbsp;·&nbsp; Brand Storyteller
+            Digital Marketing Strategist <span className="opacity-60">·</span> Brand Storyteller
           </motion.p>
 
           {/* Tagline */}

@@ -22,17 +22,25 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="pt-72px md:pt-96px lg:pt-140px pb-0px luxury-dark-section"
+      className="pt-72px md:pt-96px lg:pt-140px pb-0px luxury-dark-section overflow-hidden"
       aria-label="Contact Nourin Nassar"
     >
-      {/* Cinematic warm studio lights */}
+      {/* Cinematic warm studio lights — clamped so they never break mobile layout */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full pointer-events-none filter blur-[120px] opacity-[0.08]"
-        style={{ backgroundColor: "var(--cream)" }}
+        className="absolute top-0 left-1/2 -translate-x-1/2 rounded-full pointer-events-none filter blur-[80px] md:blur-[120px] opacity-[0.08]"
+        style={{
+          backgroundColor: "var(--cream)",
+          width: "min(800px, 90vw)",
+          height: "min(400px, 50vw)",
+        }}
       />
       <div
-        className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none filter blur-[100px] opacity-[0.04]"
-        style={{ backgroundColor: "var(--espresso-light)" }}
+        className="absolute bottom-0 right-0 rounded-full pointer-events-none filter blur-[70px] md:blur-[100px] opacity-[0.04]"
+        style={{
+          backgroundColor: "var(--espresso-light)",
+          width: "min(400px, 60vw)",
+          height: "min(400px, 60vw)",
+        }}
       />
 
       <div className="editorial-container luxury-dark-content">
@@ -68,7 +76,7 @@ export default function Contact() {
               {/* Cinematic Heading */}
               <motion.h2
                 variants={fadeUp}
-                className="font-cormorant text-fluid-display font-semibold leading-[1.05] tracking-[-0.015em] mb-24px text-left"
+                className="font-cormorant text-fluid-display font-semibold leading-[1.05] tracking-[-0.015em] mb-24px text-left wrap-break-word hyphens-auto"
                 style={{ color: "var(--ivory)" }}
               >
                 Let&apos;s build something
