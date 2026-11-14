@@ -1,21 +1,25 @@
+import Nav from "@/components/Nav";
 import Hero from "@/sections/Hero";
-import PinnedInsights from "@/sections/PinnedInsights";
-import DigitalDiary from "@/sections/DigitalDiary";
-import Results from "@/sections/Results";
+import CaseStudies from "@/sections/CaseStudies";
 import Services from "@/sections/Services";
-import Testimonials from "@/sections/Testimonials";
+import Process from "@/sections/Process";
+import About from "@/sections/About";
 import Contact from "@/sections/Contact";
+import Footer from "@/sections/Footer";
 
 export default function HomePage() {
   return (
-    <main id="main-content" aria-label="Nourin Nassar Portfolio">
-      <Hero />
-      <PinnedInsights />
-      <DigitalDiary />
-      <Results />
-      <Services />
-      <Testimonials />
-      <Contact />
-    </main>
+    <>
+      <Nav />
+      <main id="main-content">
+        <Hero />
+        <CaseStudies />
+        <Services />
+        <Process />
+        <About />
+        <Contact />
+      </main>
+      <Footer />
+    </>
   );
 }

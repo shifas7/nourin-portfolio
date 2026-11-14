@@ -1,361 +1,251 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { staggerContainer, fadeUp } from "@/lib/motion";
-import { SOCIAL_LINKS } from "@/constants";
-import ScrollGlowText from "@/components/ScrollGlowText";
+import { useId, useState } from "react";
+import { ArrowUpRight, Check, EnvelopeSimple, LinkedinLogo, WhatsappLogo } from "@phosphor-icons/react";
+import PhoneStation from "@/components/phone/PhoneStation";
+import CssPhone from "@/components/phone/CssPhone";
+import SplitReveal from "@/components/SplitReveal";
+import { profile, briefOptions } from "@/lib/content";
+import { updateBrief, useBrief, briefToText } from "@/lib/brief-store";
+
+type Errors = Partial<Record<"name" | "email" | "services", string>>;
+
+const field =
+  "h-13 w-full rounded-2xl border border-line bg-transparent px-5 text-fg placeholder:text-muted transition-colors focus:border-accent focus:outline-none focus-visible:outline-none";
 
 export default function Contact() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    brief: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const uid = useId();
+  const brief = useBrief();
+  const [errors, setErrors] = useState<Errors>({});
+  const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const toggleService = (s: string) =>
+    updateBrief({
+      services: brief.services.includes(s) ? brief.services.filter((x) => x !== s) : [...brief.services, s],
+    });
+
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    const next: Errors = {};
+    if (!brief.services.length) next.services = "Pick at least one, or choose Not sure yet.";
+    if (!brief.name.trim()) next.name = "Add your name so I know who to reply to.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brief.email)) next.email = "Add an email address I can reply to.";
+    setErrors(next);
+    if (next.services) return document.querySelector<HTMLElement>(`#${CSS.escape(uid)}-services button`)?.focus();
+    if (next.name) return document.getElementById(`${uid}-name`)?.focus();
+    if (next.email) return document.getElementById(`${uid}-email`)?.focus();
+
+    const subject = `New project: ${brief.services.join(", ")}${brief.company ? ` for ${brief.company}` : ""}`;
+    const body = `${briefToText(brief)}\n\nReply to: ${brief.email}`;
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setSent(true);
   };
 
   return (
-    <section
+    <PhoneStation
+      as="section"
       id="contact"
-      className="pt-72px md:pt-96px lg:pt-140px pb-0px luxury-dark-section overflow-hidden"
-      aria-label="Contact Nourin Nassar"
+      labelledBy="contact-title"
+      pose={{ screen: "chat", x: 0.5, y: 0, rotX: 0.03, rotY: -0.26, rotZ: 0.02, scale: 1.12 }}
+      className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 border-t border-line px-4 py-28 md:px-8 md:py-36 lg:grid-cols-12"
     >
-      {/* Cinematic warm studio lights — clamped so they never break mobile layout */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 rounded-full pointer-events-none filter blur-[80px] md:blur-[120px] opacity-[0.08]"
-        style={{
-          backgroundColor: "var(--cream)",
-          width: "min(800px, 90vw)",
-          height: "min(400px, 50vw)",
-        }}
-      />
-      <div
-        className="absolute bottom-0 right-0 rounded-full pointer-events-none filter blur-[70px] md:blur-[100px] opacity-[0.04]"
-        style={{
-          backgroundColor: "var(--espresso-light)",
-          width: "min(400px, 60vw)",
-          height: "min(400px, 60vw)",
-        }}
-      />
+      <div className="lg:col-span-6">
+        <SplitReveal
+          id="contact-title"
+          text="Start a project"
+          className="font-display text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.95] text-fg [text-wrap:balance]"
+        />
+        <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted">
+          Tell me what you need. Your message takes shape as you type, then opens in your email ready to
+          send.
+        </p>
 
-      <div className="editorial-container luxury-dark-content">
-        {/* Split Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-48px lg:gap-72px items-start">
-          
-          {/* Left Column (5 cols): Typography & Direct Coordinates */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="lg:col-span-5 flex flex-col justify-between h-full space-y-8 lg:space-y-12"
-          >
-            <div>
-              {/* Category indicator with elegant lines */}
-              <motion.span
-                variants={fadeUp}
-                className="font-manrope text-fluid-sm tracking-[0.25em] flex items-center gap-3 mb-24px"
-                style={{ color: "var(--cream-dark)" }}
+        <form noValidate onSubmit={submit} className="mt-12 grid gap-8">
+          <fieldset>
+            <legend className="font-medium text-fg">What do you need help with?</legend>
+            <div id={`${uid}-services`} className="mt-3 flex flex-wrap gap-2">
+              {briefOptions.services.map((s) => {
+                const on = brief.services.includes(s);
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
+                    onClick={() => toggleService(s)}
+                    className={`inline-flex h-11 items-center gap-1.5 rounded-full border px-5 text-[15px] transition-[background-color,border-color,color,transform] duration-300 ease-out-expo active:scale-[0.97] ${
+                      on ? "border-fg bg-fg text-bg" : "border-line text-fg hover:border-fg"
+                    }`}
+                  >
+                    {on && <Check size={14} weight="bold" />}
+                    {s}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.services && <p className="mt-2 text-sm text-accent-ink">{errors.services}</p>}
+          </fieldset>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <label htmlFor={`${uid}-budget`} className="font-medium text-fg">
+                Monthly budget
+              </label>
+              <select
+                id={`${uid}-budget`}
+                value={brief.budget}
+                onChange={(e) => updateBrief({ budget: e.target.value })}
+                className={`${field} cursor-pointer`}
               >
-                Contact // Dialogue{" "}
-                <motion.span
-                  className="h-px bg-cream-dark/30 origin-left inline-block"
-                  style={{ width: "32px" }}
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-                />
-              </motion.span>
-
-              {/* Cinematic Heading */}
-              <motion.h2
-                variants={fadeUp}
-                className="font-cormorant text-fluid-display font-semibold leading-[1.05] tracking-[-0.015em] mb-24px text-left wrap-break-word hyphens-auto"
-                style={{ color: "var(--ivory)" }}
+                <option value="">Choose a range</option>
+                {briefOptions.budgets.map((b) => (
+                  <option key={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor={`${uid}-timeline`} className="font-medium text-fg">
+                When do you want to start?
+              </label>
+              <select
+                id={`${uid}-timeline`}
+                value={brief.timeline}
+                onChange={(e) => updateBrief({ timeline: e.target.value })}
+                className={`${field} cursor-pointer`}
               >
-                Let&apos;s build something
-                <br />
-                <span className="italic font-light text-cream">
-                  people remember.
-                </span>
-              </motion.h2>
+                <option value="">Choose a timeline</option>
+                {briefOptions.timelines.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-              {/* Descriptive Paragraph */}
-              <ScrollGlowText
-                text="Whether it's a brand launch, a campaign overhaul, or finding your digital voice — I'd love to hear about it."
-                className="font-inter text-sm md:text-base leading-relaxed text-left max-w-lg"
-                theme="dark"
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <label htmlFor={`${uid}-name`} className="font-medium text-fg">
+                Your name
+              </label>
+              <input
+                id={`${uid}-name`}
+                value={brief.name}
+                onChange={(e) => updateBrief({ name: e.target.value })}
+                autoComplete="name"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? `${uid}-name-err` : undefined}
+                className={field}
+              />
+              {errors.name && (
+                <p id={`${uid}-name-err`} className="text-sm text-accent-ink">
+                  {errors.name}
+                </p>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor={`${uid}-company`} className="font-medium text-fg">
+                Brand or business
+              </label>
+              <input
+                id={`${uid}-company`}
+                value={brief.company}
+                onChange={(e) => updateBrief({ company: e.target.value })}
+                autoComplete="organization"
+                className={field}
               />
             </div>
+          </div>
 
-            {/* Direct Coordinates Block with animated border and stagger entry */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="space-y-6 pt-8 text-left relative"
-            >
-              {/* Dynamic border-top draw */}
-              <motion.div
-                className="absolute top-0 left-0 right-0 h-[1px] bg-cream-dark/15 origin-left"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-              />
-
-              <motion.div variants={fadeUp}>
-                <span className="font-manrope text-[10px] tracking-[0.2em] uppercase text-cream-dark/60 block mb-8px">
-                  Direct Coordinates
-                </span>
-                <a
-                  href="mailto:hello@nourinnassar.com"
-                  className="font-cormorant text-2xl md:text-3xl italic text-cream hover:text-ivory transition-all duration-300 relative inline-block group"
-                >
-                  hello@nourinnassar.com
-                  <span className="absolute left-0 bottom-0 w-full h-px bg-cream scale-x-100 origin-left transition-transform duration-500 group-hover:scale-x-0" />{" "}
-                  <span className="absolute left-0 bottom-0 w-full h-px bg-ivory scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100" />{" "}
-                </a>
-              </motion.div>
-
-              <motion.div variants={fadeUp}>
-                <span className="font-manrope text-[10px] tracking-[0.2em] uppercase text-cream-dark/60 block mb-6px">
-                  Location & Availability
-                </span>
-                <p className="font-inter text-sm text-ivory/80">
-                  Based in Dubai & Beirut // Available globally
-                </p>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column (7 cols): The Contact Form */}
-          <div className="lg:col-span-7 w-full">
-            {/* Form or Success */}
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="text-center py-48px bg-matte-soft/20 rounded-card border border-cream-dark/10 p-32px"
-              >
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-24px"
-                  style={{
-                    backgroundColor: "var(--espresso)",
-                    border: "1px solid rgba(217,194,176,0.3)",
-                  }}
-                >
-                  <span style={{ color: "var(--cream)", fontSize: "24px" }}>
-                    ✦
-                  </span>
-                </div>
-                <h3
-                  className="font-cormorant text-3xl font-semibold mb-16px"
-                  style={{ color: "var(--ivory)" }}
-                >
-                  Message received.
-                </h3>
-                <p
-                  className="font-inter text-sm"
-                  style={{ color: "rgba(250,247,244,0.6)" }}
-                >
-                  I&apos;ll be in touch soon. Thank you for reaching out.
-                </p>
-              </motion.div>
-            ) : (
-              <motion.form
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }}
-                onSubmit={handleSubmit}
-                className="grid gap-32px lg:gap-48px"
-                aria-label="Contact form"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-32px">
-                  {/* Name */}
-                  <motion.div variants={fadeUp} className="relative group">
-                    <label
-                      htmlFor="contact-name"
-                      className="font-manrope text-[10px] tracking-[0.2em] uppercase text-cream-dark block mb-8px text-left"
-                    >
-                      My name is
-                    </label>
-                    <input
-                      id="contact-name"
-                      type="text"
-                      required
-                      value={formState.name}
-                      onChange={(e) =>
-                        setFormState({ ...formState, name: e.target.value })
-                      }
-                      className="w-full bg-transparent border-none text-ivory text-sm md:text-base outline-none placeholder-cream-dark/25 text-left relative z-10"
-                      style={{ paddingTop: "12px", paddingBottom: "12px" }}
-                      placeholder="Your name"
-                    />
-                    {/* Animated Baseline */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-[1px] bg-cream-dark/25 origin-left"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-                    />
-                    {/* Focus Accent Border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-cream scale-x-0 origin-left transition-transform duration-500 group-focus-within:scale-x-100 z-20" />
-                  </motion.div>
-
-                  {/* Email */}
-                  <motion.div variants={fadeUp} className="relative group">
-                    <label
-                      htmlFor="contact-email"
-                      className="font-manrope text-[10px] tracking-[0.2em] uppercase text-cream-dark block mb-8px text-left"
-                    >
-                      Reach me at
-                    </label>
-                    <input
-                      id="contact-email"
-                      type="email"
-                      required
-                      value={formState.email}
-                      onChange={(e) =>
-                        setFormState({ ...formState, email: e.target.value })
-                      }
-                      className="w-full bg-transparent border-none text-ivory text-sm md:text-base outline-none placeholder-cream-dark/25 text-left relative z-10"
-                      style={{ paddingTop: "12px", paddingBottom: "12px" }}
-                      placeholder="hello@brand.com"
-                    />
-                    {/* Animated Baseline */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-[1px] bg-cream-dark/25 origin-left"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-                    />
-                    {/* Focus Accent Border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-cream scale-x-0 origin-left transition-transform duration-500 group-focus-within:scale-x-100 z-20" />
-                  </motion.div>
-                </div>
-
-                {/* Project Brief */}
-                <motion.div variants={fadeUp} className="relative group">
-                  <label
-                    htmlFor="contact-brief"
-                    className="font-manrope text-[10px] tracking-[0.2em] uppercase text-cream-dark block mb-8px text-left"
-                  >
-                    About my campaign / project brief
-                  </label>
-                  <textarea
-                    id="contact-brief"
-                    rows={4}
-                    value={formState.brief}
-                    onChange={(e) =>
-                      setFormState({ ...formState, brief: e.target.value })
-                    }
-                    className="w-full bg-transparent border-none text-ivory text-sm md:text-base outline-none placeholder-cream-dark/25 resize-none text-left relative z-10"
-                    style={{ paddingTop: "12px", paddingBottom: "12px" }}
-                    placeholder="Describe your vision, target timeline, or core values..."
-                  />
-                  {/* Animated Baseline */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-[1px] bg-cream-dark/25 origin-left"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-                  />
-                  {/* Focus Accent Border */}
-                  <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-cream scale-x-0 origin-left transition-transform duration-500 group-focus-within:scale-x-100 z-20" />
-                </motion.div>
-
-                {/* Submit */}
-                <motion.div variants={fadeUp} className="text-left">
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto font-manrope text-xs tracking-[0.18em] uppercase rounded-full font-medium transition-all duration-500 active:scale-[0.98] cursor-pointer"
-                    style={{
-                      backgroundColor: "var(--ivory)",
-                      color: "var(--espresso)",
-                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
-                      padding: "16px 32px",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "var(--cream)";
-                      e.currentTarget.style.boxShadow =
-                          "0 8px 32px rgba(217, 194, 176, 0.45)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "var(--ivory)";
-                      e.currentTarget.style.boxShadow =
-                          "0 4px 20px rgba(0, 0, 0, 0.25)";
-                    }}
-                  >
-                    Send Message ✦
-                  </button>
-                </motion.div>
-              </motion.form>
+          <div className="grid gap-2">
+            <label htmlFor={`${uid}-email`} className="font-medium text-fg">
+              Email
+            </label>
+            <input
+              id={`${uid}-email`}
+              type="email"
+              value={brief.email}
+              onChange={(e) => updateBrief({ email: e.target.value })}
+              autoComplete="email"
+              placeholder="you@yourbrand.com"
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? `${uid}-email-err` : undefined}
+              className={field}
+            />
+            {errors.email && (
+              <p id={`${uid}-email-err`} className="text-sm text-accent-ink">
+                {errors.email}
+              </p>
             )}
           </div>
+
+          <div className="grid gap-2">
+            <label htmlFor={`${uid}-message`} className="font-medium text-fg">
+              Anything else
+            </label>
+            <textarea
+              id={`${uid}-message`}
+              rows={3}
+              value={brief.message}
+              onChange={(e) => updateBrief({ message: e.target.value })}
+              placeholder="What has worked before, what has not, links to your pages."
+              className="w-full resize-y rounded-2xl border border-line bg-transparent px-5 py-4 text-fg placeholder:text-muted focus:border-accent focus:outline-none focus-visible:outline-none"
+            />
+          </div>
+
+          {/* Live preview for small screens, where the phone isn't beside the form */}
+          <div className="rounded-[28px] bg-panel p-5 lg:hidden" aria-live="polite">
+            <p className="text-sm font-medium text-fg">Your message</p>
+            <p className="mt-3 rounded-[20px] rounded-br-md bg-accent px-4 py-3 text-[15px] leading-snug text-on-accent">
+              {briefToText(brief)}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              type="submit"
+              className="inline-flex h-13 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-on-accent transition-transform duration-300 ease-out-expo hover:-translate-y-0.5 active:translate-y-px"
+            >
+              Send the brief <ArrowUpRight size={18} weight="bold" />
+            </button>
+            {sent && (
+              <p role="status" className="max-w-[40ch] text-[15px] text-muted">
+                Your email app should open with the brief. If not, write to{" "}
+                <a className="text-fg underline underline-offset-4" href={`mailto:${profile.email}`}>
+                  {profile.email}
+                </a>
+                .
+              </p>
+            )}
+          </div>
+        </form>
+
+        <div className="mt-12 flex flex-wrap gap-3 border-t border-line pt-8">
+          <a href={`mailto:${profile.email}`} className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg">
+            <EnvelopeSimple size={18} /> {profile.email}
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg"
+          >
+            <LinkedinLogo size={18} /> LinkedIn
+          </a>
+          {profile.whatsapp && (
+            <a
+              href={`https://wa.me/${profile.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg"
+            >
+              <WhatsappLogo size={18} /> WhatsApp
+            </a>
+          )}
         </div>
-
-        {/* Full-Width Grounded Footer */}
-        <footer className="mt-48px md:mt-72px lg:mt-96px pt-48px border-t border-cream-dark/15 pb-32px">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-32px">
-            {/* Brand Signature */}
-            <div className="flex flex-col items-start gap-1">
-              <span className="font-cormorant font-bold italic text-xl tracking-wider text-ivory">
-                N. NASSAR
-              </span>
-              <span className="font-manrope text-[8px] font-bold tracking-[0.25em] text-cream-dark/50 uppercase">
-                DIGITAL STRATEGIST // STORYTELLER
-              </span>
-            </div>
-
-            {/* Social Links Row */}
-            <div className="flex flex-wrap items-center gap-12px md:gap-16px">
-              {SOCIAL_LINKS.map((link) => (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.label}
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group relative flex items-center justify-center px-16px py-8px rounded-full border border-cream-dark/15 hover:border-cream/45 bg-matte-soft/20 hover:bg-cream-dark/5 transition-all duration-300 font-manrope text-[10px] font-bold tracking-[0.18em] uppercase text-cream-dark/70 hover:text-ivory"
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cream-dark/40 group-hover:bg-cream transition-colors duration-300" />
-                    {link.label}
-                    <span className="inline-block transform transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[8px] text-cream-dark/60 group-hover:text-ivory">
-                      ↗
-                    </span>
-                  </span>
-                </motion.a>
-              ))}
-            </div>
-          </div>
-
-          {/* Lower Copyright Line */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-16px mt-32px md:mt-48px pt-24px border-t border-cream-dark/5">
-            <p className="font-manrope text-[10px] tracking-widest text-cream-dark/30">
-              © 2026 Nourin Nassar · All Rights Reserved
-            </p>
-            <p className="font-manrope text-[10px] tracking-widest text-cream-dark/30 uppercase">
-              I don&apos;t market products. I create digital desire.
-            </p>
-          </div>
-        </footer>
       </div>
-    </section>
+
+      <div className="hidden justify-center lg:col-span-5 lg:col-start-8 lg:flex lg:items-start">
+        <CssPhone screen="chat" width={270} className="lg:sticky lg:top-24" />
+      </div>
+    </PhoneStation>
   );
 }
