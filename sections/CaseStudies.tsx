@@ -31,11 +31,11 @@ export default function CaseStudies() {
             pose={{
               screen: c.screen,
               x: flip ? -0.5 : 0.5,
-              y: 0,
+              y: -0.05,
               rotX: 0.04,
               rotY: flip ? 0.32 : -0.32,
               rotZ: flip ? -0.03 : 0.03,
-              scale: 1.12,
+              scale: 1.02,
             }}
             className="grid min-h-[100dvh] grid-cols-1 items-center gap-10 border-t border-line py-20 lg:grid-cols-12 lg:py-0"
           >

@@ -79,13 +79,13 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         <nav aria-label="Breadcrumb" className="text-[14px] text-muted">
           <ol className="flex flex-wrap gap-2">
             <li>
-              <Link href="/" className="link-draw pb-0.5 hover:text-fg">
+              <Link href="/" className="tap link-draw pb-0.5 hover:text-fg">
                 Home
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
-              <Link href="/#services" className="link-draw pb-0.5 hover:text-fg">
+              <Link href="/#services" className="tap link-draw pb-0.5 hover:text-fg">
                 Services
               </Link>
             </li>
@@ -110,7 +110,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               >
                 Start a project
               </Link>
-              <Link href={briefLink(briefOptions.services[0])} data-track="cta_free_audit" className="link-draw pb-0.5 text-base text-fg">
+              <Link href={briefLink(briefOptions.services[0])} data-track="cta_free_audit" className="tap link-draw pb-0.5 text-base text-fg">
                 Or get a free 15-min audit
               </Link>
             </div>

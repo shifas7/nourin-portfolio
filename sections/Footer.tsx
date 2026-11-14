@@ -8,10 +8,10 @@ export default function Footer() {
     <PhoneStation as="div" pose={{ visible: false }} className="mx-auto max-w-[1400px] px-4 pb-24 md:px-8 lg:pb-8">
       <footer className="border-t border-line pt-8 text-[15px]">
         <nav aria-label="Services">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          <ul className="flex flex-wrap gap-x-6 gap-y-4">
             {services.map((s) => (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="link-draw pb-0.5 text-fg">
+                <Link href={`/services/${s.slug}`} className="tap link-draw pb-0.5 text-fg">
                   {s.name}
                 </Link>
               </li>
@@ -22,7 +22,7 @@ export default function Footer() {
           <p className="text-muted">
             © {new Date().getFullYear()} {profile.name}. Digital marketer, {profile.location}.
           </p>
-          <a href="#main-content" className="link-draw inline-flex items-center gap-1 self-start pb-0.5 text-fg">
+          <a href="#main-content" className="tap link-draw inline-flex items-center gap-1 self-start pb-0.5 text-fg">
             Back to top <ArrowUp size={14} />
           </a>
         </div>

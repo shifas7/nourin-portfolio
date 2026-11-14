@@ -38,7 +38,7 @@ export default function Hero() {
               >
                 Start a project
               </a>
-              <AuditButton className="link-draw inline-flex items-center pb-0.5 text-base text-fg">
+              <AuditButton className="tap link-draw inline-flex items-center pb-0.5 text-base text-fg">
                 Or get a free 15-min audit
               </AuditButton>
             </div>

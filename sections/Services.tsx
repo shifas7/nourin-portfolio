@@ -43,7 +43,7 @@ export default function Services() {
               </ul>
               <Link
                 href={`/services/${s.slug}`}
-                className="link-draw inline-flex items-center gap-1.5 self-start pb-0.5 text-[15px] font-medium"
+                className="tap link-draw inline-flex items-center gap-1.5 self-start pb-0.5 text-[15px] font-medium"
               >
                 How I do it <ArrowRight size={15} />
               </Link>

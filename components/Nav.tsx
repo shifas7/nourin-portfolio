@@ -11,7 +11,7 @@ export default function Nav({ home = true }: { home?: boolean }) {
     <header className="fixed inset-x-0 top-0 z-40">
       <div aria-hidden className="pointer-events-none absolute inset-0 border-b border-line bg-bg/85 backdrop-blur-md" />
       <nav aria-label="Primary" className="relative mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 md:px-8">
-        <a href={home ? "#top" : "/"} className="flex items-center gap-2.5 text-[15px] font-semibold tracking-tight text-fg">
+        <a href={home ? "#top" : "/"} className="flex h-11 items-center gap-2.5 text-[15px] font-semibold tracking-tight text-fg">
           <span aria-hidden className="h-7 w-7 overflow-hidden rounded-full bg-panel">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/nourin-avatar.webp" alt="" className="h-full w-full object-cover object-[50%_30%]" />

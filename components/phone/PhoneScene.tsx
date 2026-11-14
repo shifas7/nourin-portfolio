@@ -155,7 +155,13 @@ function Phone({ dark }: { dark: boolean }) {
   return (
     <group ref={group} position={[viewport.width / 4, 0, 0]} scale={0.0001}>
       <RoundedBox args={[W, H, D]} radius={RADIUS} smoothness={8} bevelSegments={6} creaseAngle={0.4}>
-        <meshPhysicalMaterial color={frame} metalness={0.92} roughness={dark ? 0.32 : 0.28} clearcoat={1} clearcoatRoughness={0.15} />
+        <meshPhysicalMaterial
+          color={frame}
+          metalness={dark ? 0.55 : 0.92}
+          roughness={dark ? 0.38 : 0.28}
+          clearcoat={1}
+          clearcoatRoughness={0.15}
+        />
       </RoundedBox>
 
       <mesh position={[0, 0, D / 2 + 0.0008]}>
@@ -277,7 +283,9 @@ export default function PhoneScene({ onReady }: { onReady?: () => void }) {
         dpr={[1, 2]}
         camera={{ position: [0, 0, 6], fov: 30 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        style={{ position: "absolute", inset: 0 }}
+        // R3F sets pointer-events:auto on its wrapper; the phone is decorative and must
+        // never sit between the visitor's cursor and the page underneath.
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
         onCreated={() =>
           requestAnimationFrame(() =>
             requestAnimationFrame(() => {
