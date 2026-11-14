@@ -1,23 +1,31 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
-import PhoneLayer from "@/components/phone/PhoneLayer";
+import Analytics from "@/components/Analytics";
 import { profile } from "@/lib/content";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: `${profile.name} | Digital Marketer in Kochi for Meta Ads, Reels and SEO`,
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${profile.name} | Digital Marketer in Kochi for Meta Ads, Reels and SEO`,
+    template: `%s | ${profile.name}`,
+  },
   description:
     "Nourin Nassar is a Kochi-based digital marketer. Meta Ads, social media, reels, SEO and local search for brands that need leads, not likes.",
+  alternates: { canonical: "/" },
   openGraph: {
     title: `${profile.name} | Digital Marketer in Kochi`,
     description: "Campaigns that turn scrolling into enquiries. Meta Ads, reels, SEO and local search.",
-    images: ["/images/nourin-square.jpg"],
     type: "website",
+    locale: "en_IN",
+    siteName: profile.name,
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
@@ -31,7 +39,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   name: `${profile.name}, Digital Marketer`,
-  image: "/images/nourin-square.jpg",
+  url: SITE_URL,
+  image: `${SITE_URL}/images/nourin-square.jpg`,
   email: `mailto:${profile.email}`,
   areaServed: ["Kochi", "Kerala", "India"],
   address: { "@type": "PostalAddress", addressLocality: "Ernakulam", addressRegion: "Kerala", addressCountry: "IN" },
@@ -51,8 +60,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <SmoothScroll />
-        <PhoneLayer />
         {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -14,6 +14,8 @@
   --accent: #ff5b2e;
   --accent-ink: #c2370f;
   --on-accent: #111113;
+  --spot: rgb(255 255 255 / 0.75);
+  --phone-shadow: rgb(17 17 19 / 0.32);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +28,8 @@
     --accent: #ff6a40;
     --accent-ink: #ff8a66;
     --on-accent: #111113;
+    --spot: rgb(255 106 64 / 0.10);
+    --phone-shadow: rgb(0 0 0 / 0.7);
   }
 }
 
@@ -82,7 +86,8 @@ body {
 
 /* Once the WebGL phone is running, the flat fallbacks step aside. */
 .has-3d .css-phone {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Grain on a fixed layer only. */
@@ -129,4 +134,22 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Screen change: new screen slides up inside the glass. */
+@keyframes screen-slide-in {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.screen-slide-in {
+  animation: screen-slide-in 0.75s var(--ease-out-expo) both;
+}
+
+/* Flat fallback phones fade out as the 3D phone fades in. */
+.css-phone {
+  transition: opacity 0.6s var(--ease-out-expo);
 }

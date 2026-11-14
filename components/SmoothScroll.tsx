@@ -25,7 +25,7 @@ export default function SmoothScroll() {
     let lenis: Lenis | null = null;
 
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, anchors: { offset: -8 } });
+      lenis = new Lenis({ lerp: 0.1, anchors: { offset: -84 } });
       lenis.on("scroll", ScrollTrigger.update);
       setLenis(lenis);
     }

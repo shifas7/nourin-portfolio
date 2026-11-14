@@ -13,7 +13,7 @@ export default function About() {
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-panel lg:col-span-5">
         <Image
-          src="/images/nourin-square.jpg"
+          src="/images/nourin-square-900.webp"
           alt="Nourin Nassar smiling at her desk"
           fill
           sizes="(min-width: 1024px) 40vw, 100vw"

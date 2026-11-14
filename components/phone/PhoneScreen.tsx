@@ -19,14 +19,14 @@ import {
   Microphone,
   Plus,
 } from "@phosphor-icons/react";
-import type { ScreenId } from "@/lib/content";
+import { screenshots, type ScreenId } from "@/lib/content";
 import { useBrief, briefToText } from "@/lib/brief-store";
 
 import { SCREEN_W, SCREEN_H } from "@/lib/screen";
 
 /*
  * Illustrative, brand-neutral screens showing the kind of work Nourin does.
- * TODO: swap any of these for real screenshots or screen recordings of her campaigns.
+ * Any screen with a path in `screenshots` (lib/content.ts) shows that real image instead.
  */
 
 function StatusBar({ dark = false }: { dark?: boolean }) {
@@ -52,7 +52,7 @@ function ReelScreen() {
   return (
     <div className="relative h-full w-full bg-black text-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/images/nourin-portrait.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <img src="/images/nourin-portrait-480.webp" alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.45)_0%,rgba(0,0,0,0)_22%,rgba(0,0,0,0)_55%,rgba(0,0,0,0.75)_100%)]" />
       <div className="relative">
         <StatusBar dark />
@@ -68,7 +68,7 @@ function ReelScreen() {
         <div className="flex items-center gap-2.5">
           <span className="h-9 w-9 overflow-hidden rounded-full border-2 border-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/nourin-square.jpg" alt="" className="h-full w-full object-cover" />
+            <img src="/images/nourin-avatar.webp" alt="" className="h-full w-full object-cover" />
           </span>
           <span className="text-[15px] font-semibold">Nourin Nassar</span>
           <span className="rounded-md border border-white/70 px-2 py-0.5 text-[12px] font-semibold">Follow</span>
@@ -111,11 +111,11 @@ function LeadScreen() {
         <p className="mt-1 text-[13px] text-[#666]">Your brand will call you back today.</p>
         {["Full name", "Phone number", "Preferred store"].map((f, i) => (
           <div key={f} className="mt-3 rounded-xl border border-[#e2e2e2] px-4 py-2.5">
-            <span className="block text-[11px] text-[#888]">{f}</span>
+            <span className="block text-[11px] text-[#636363]">{f}</span>
             <span className="block text-[15px]">{["Anjali Menon", "+91 98•• ••• •12", "Kochi, MG Road"][i]}</span>
           </div>
         ))}
-        <div className="mt-4 rounded-xl bg-[#ff5b2e] py-3.5 text-center text-[16px] font-semibold text-white">Submit</div>
+        <div className="mt-4 rounded-xl bg-[#ff5b2e] py-3.5 text-center text-[16px] font-semibold text-[#111113]">Submit</div>
       </div>
     </div>
   );
@@ -194,14 +194,14 @@ function CalendarScreen() {
       <StatusBar />
       <div className="flex items-end justify-between px-5 pt-2">
         <div>
-          <p className="text-[13px] text-[#888]">Content calendar</p>
+          <p className="text-[13px] text-[#636363]">Content calendar</p>
           <p className="text-[28px] font-bold">November</p>
         </div>
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#111] text-white">
           <Plus size={18} weight="bold" />
         </span>
       </div>
-      <div className="mt-4 grid grid-cols-7 px-3 text-center text-[11px] font-semibold text-[#999]">
+      <div className="mt-4 grid grid-cols-7 px-3 text-center text-[11px] font-semibold text-[#636363]">
         {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
           <span key={i}>{d}</span>
         ))}
@@ -212,9 +212,9 @@ function CalendarScreen() {
           const p = posts[day];
           return (
             <div key={i} className={`h-[62px] rounded-lg p-1 ${day > 0 && day <= 30 ? "bg-[#f4f4f2]" : ""}`}>
-              {day > 0 && day <= 30 && <span className="block text-[11px] text-[#777]">{day}</span>}
+              {day > 0 && day <= 30 && <span className="block text-[11px] text-[#5f5f5f]">{day}</span>}
               {p && (
-                <span className="mt-1 block rounded px-1 py-0.5 text-[10px] font-semibold text-white" style={{ background: p.c, color: p.c === "#c9c3b8" ? "#222" : "#fff" }}>
+                <span className="mt-1 block rounded px-1 py-0.5 text-[10px] font-semibold" style={{ background: p.c, color: p.c === "#c9c3b8" || p.c === "#ff5b2e" ? "#111113" : "#fff" }}>
                   {p.t}
                 </span>
               )}
@@ -225,7 +225,7 @@ function CalendarScreen() {
       <div className="mx-4 mt-4 flex items-center gap-3 rounded-2xl bg-[#111] p-4 text-white">
         <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/nourin-portrait.jpg" alt="" className="h-full w-full object-cover" />
+          <img src="/images/nourin-portrait-480.webp" alt="" className="h-full w-full object-cover" />
         </span>
         <span className="leading-tight">
           <span className="block text-[12px] text-white/60">Tomorrow, 7:00 pm</span>
@@ -267,7 +267,7 @@ function MapScreen() {
         <p className="text-[22px] font-bold">Your brand</p>
         <p className="mt-1 text-[14px] text-[#555]">Jewellery store, MG Road</p>
         <p className="mt-1 text-[14px]">
-          <span className="font-semibold text-[#1f8f4e]">Open now</span>
+          <span className="font-semibold text-[#17723f]">Open now</span>
           <span className="text-[#555]"> until 9 pm, 1.2 km away</span>
         </p>
         <div className="mt-5 grid grid-cols-3 gap-3">
@@ -278,7 +278,7 @@ function MapScreen() {
           ].map((b) => (
             <span
               key={b.l}
-              className={`flex flex-col items-center gap-1 rounded-2xl py-3 text-[13px] font-semibold ${b.main ? "bg-[#ff5b2e] text-white" : "bg-[#f1f1ef]"}`}
+              className={`flex flex-col items-center gap-1 rounded-2xl py-3 text-[13px] font-semibold ${b.main ? "bg-[#ff5b2e] text-[#111113]" : "bg-[#f1f1ef]"}`}
             >
               {b.i}
               {b.l}
@@ -297,10 +297,10 @@ function SearchScreen() {
       <div className="mx-4 mt-1 flex items-center gap-3 rounded-full border border-[#e3e3e3] px-4 py-3">
         <MagnifyingGlass size={18} weight="bold" />
         <span className="flex-1 text-[15px]">how to check gold purity in dubai</span>
-        <Microphone size={18} weight="fill" className="text-[#888]" />
+        <Microphone size={18} weight="fill" className="text-[#636363]" />
       </div>
       <div className="mt-5 px-5">
-        <p className="text-[12px] text-[#777]">yourbrand.com › guides</p>
+        <p className="text-[12px] text-[#5f5f5f]">yourbrand.com › guides</p>
         <p className="mt-1 text-[19px] font-semibold leading-snug text-[#1a3fbf]">How to check gold purity in Dubai: a buyer&apos;s guide</p>
         <p className="mt-1.5 text-[14px] leading-snug text-[#444]">Hallmarks, karat stamps and the three questions to ask before you buy.</p>
         <div className="mt-3 divide-y divide-[#eee] rounded-2xl border border-[#eee]">
@@ -315,8 +315,8 @@ function SearchScreen() {
           A 22K hallmark shows the purity number 916, the assay office mark and the jeweller&apos;s code.
         </div>
       </div>
-      <div className="mt-5 px-5 opacity-60">
-        <p className="text-[12px] text-[#777]">another-site.com</p>
+      <div className="mt-5 px-5">
+        <p className="text-[12px] text-[#5f5f5f]">another-site.com</p>
         <p className="mt-1 text-[17px] font-semibold text-[#1a3fbf]">Gold rates today</p>
         <div className="mt-2 h-3 w-4/5 rounded bg-[#eee]" />
         <div className="mt-1.5 h-3 w-3/5 rounded bg-[#eee]" />
@@ -336,22 +336,22 @@ function ChatScreen() {
         <CaretLeft size={22} weight="bold" />
         <span className="h-10 w-10 overflow-hidden rounded-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/nourin-square.jpg" alt="" className="h-full w-full object-cover" />
+          <img src="/images/nourin-avatar.webp" alt="" className="h-full w-full object-cover" />
         </span>
         <span className="leading-tight">
           <span className="block text-[16px] font-semibold">Nourin Nassar</span>
-          <span className="block text-[12px] text-[#777]">Digital marketer, Kochi</span>
+          <span className="block text-[12px] text-[#5f5f5f]">Digital marketer, Kochi</span>
         </span>
       </div>
       <div className="flex flex-1 flex-col justify-end gap-3 px-4 pb-4">
         <div className="max-w-[78%] rounded-[20px] rounded-bl-md bg-white px-4 py-3 text-[15px] leading-snug shadow-sm">
           Hi, tell me about your brand and what you want more of.
         </div>
-        <div className="ml-auto max-w-[82%] rounded-[20px] rounded-br-md bg-[#ff5b2e] px-4 py-3 text-[15px] leading-snug text-white">
+        <div className="ml-auto max-w-[82%] rounded-[20px] rounded-br-md bg-[#ff5b2e] px-4 py-3 text-[15px] leading-snug text-[#111113]">
           {empty ? (
             <span className="flex gap-1 py-1">
               {[0, 1, 2].map((i) => (
-                <span key={i} className="h-2 w-2 animate-pulse rounded-full bg-white/80" style={{ animationDelay: `${i * 160}ms` }} />
+                <span key={i} className="h-2 w-2 animate-pulse rounded-full bg-[#111113]/70" style={{ animationDelay: `${i * 160}ms` }} />
               ))}
             </span>
           ) : (
@@ -359,7 +359,7 @@ function ChatScreen() {
           )}
         </div>
       </div>
-      <div className="mx-3 mb-8 flex items-center gap-2 rounded-full bg-white px-4 py-3 text-[15px] text-[#999]">
+      <div className="mx-3 mb-8 flex items-center gap-2 rounded-full bg-white px-4 py-3 text-[15px] text-[#636363]">
         <span className="flex-1">Message</span>
         <PaperPlaneTilt size={20} weight="fill" className="text-[#ff5b2e]" />
       </div>
@@ -380,10 +380,18 @@ const screens: Record<ScreenId, () => React.ReactElement> = {
 /** A full 390x844 phone screen. */
 export default function PhoneScreen({ id }: { id: ScreenId }) {
   const Screen = screens[id];
+  const shot = screenshots[id];
   return (
     <div className="relative h-full w-full overflow-hidden" style={{ width: SCREEN_W, height: SCREEN_H }}>
-      <Island />
-      <Screen />
+      {shot ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={shot} alt="" className="absolute inset-0 h-full w-full object-cover object-top" />
+      ) : (
+        <>
+          <Island />
+          <Screen />
+        </>
+      )}
     </div>
   );
 }

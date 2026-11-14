@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import PhoneStation from "@/components/phone/PhoneStation";
 import SplitReveal from "@/components/SplitReveal";
 import { services } from "@/lib/content";
@@ -31,13 +33,21 @@ export default function Services() {
               <h3 className="font-display text-[clamp(1.8rem,2.8vw,2.6rem)] leading-[1.02]">{s.name}</h3>
               <p className="mt-4 max-w-[36ch] text-[17px] leading-relaxed opacity-75">{s.goodFor}</p>
             </div>
-            <ul className="flex flex-wrap gap-2">
-              {s.includes.map((x) => (
-                <li key={x} className="rounded-full border border-current/25 px-4 py-2 text-[14px]">
-                  {x}
-                </li>
-              ))}
-            </ul>
+            <div className="grid gap-6">
+              <ul className="flex flex-wrap gap-2">
+                {s.includes.map((x) => (
+                  <li key={x} className="rounded-full border border-current/25 px-4 py-2 text-[14px]">
+                    {x}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={`/services/${s.slug}`}
+                className="link-draw inline-flex items-center gap-1.5 self-start pb-0.5 text-[15px] font-medium"
+              >
+                How I do it <ArrowRight size={15} />
+              </Link>
+            </div>
           </article>
         ))}
       </div>

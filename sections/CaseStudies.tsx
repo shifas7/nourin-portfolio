@@ -2,6 +2,7 @@ import PhoneStation from "@/components/phone/PhoneStation";
 import CssPhone from "@/components/phone/CssPhone";
 import SplitReveal from "@/components/SplitReveal";
 import { cases } from "@/lib/content";
+import WorkRail from "@/components/WorkRail";
 
 export default function CaseStudies() {
   return (
@@ -17,12 +18,15 @@ export default function CaseStudies() {
         </p>
       </PhoneStation>
 
+      <WorkRail />
+
       {cases.map((c, i) => {
         const flip = i % 2 === 1;
         return (
           <PhoneStation
             key={c.id}
             as="article"
+            id={`work-${c.id}`}
             labelledBy={`case-${c.id}`}
             pose={{
               screen: c.screen,

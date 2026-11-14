@@ -1,12 +1,13 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { ArrowUpRight, Check, EnvelopeSimple, LinkedinLogo, WhatsappLogo } from "@phosphor-icons/react";
 import PhoneStation from "@/components/phone/PhoneStation";
 import CssPhone from "@/components/phone/CssPhone";
 import SplitReveal from "@/components/SplitReveal";
 import { profile, briefOptions } from "@/lib/content";
 import { updateBrief, useBrief, briefToText } from "@/lib/brief-store";
+import { track } from "@/lib/track";
 
 type Errors = Partial<Record<"name" | "email" | "services", string>>;
 
@@ -18,6 +19,12 @@ export default function Contact() {
   const brief = useBrief();
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+
+  // Arriving from a service page (/?service=SEO#contact) preselects that service.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("service");
+    if (wanted && briefOptions.services.includes(wanted)) updateBrief({ services: [wanted] });
+  }, []);
 
   const toggleService = (s: string) =>
     updateBrief({
@@ -37,6 +44,7 @@ export default function Contact() {
 
     const subject = `New project: ${brief.services.join(", ")}${brief.company ? ` for ${brief.company}` : ""}`;
     const body = `${briefToText(brief)}\n\nReply to: ${brief.email}`;
+    track("generate_lead", { services: brief.services.join(", "), budget: brief.budget || "not set" });
     window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
@@ -219,11 +227,12 @@ export default function Contact() {
         </form>
 
         <div className="mt-12 flex flex-wrap gap-3 border-t border-line pt-8">
-          <a href={`mailto:${profile.email}`} className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg">
+          <a href={`mailto:${profile.email}`} data-track="contact_email" className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg">
             <EnvelopeSimple size={18} /> {profile.email}
           </a>
           <a
             href={profile.linkedin}
+            data-track="contact_linkedin"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg"
@@ -233,6 +242,7 @@ export default function Contact() {
           {profile.whatsapp && (
             <a
               href={`https://wa.me/${profile.whatsapp}`}
+              data-track="contact_whatsapp"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] text-fg hover:border-fg"

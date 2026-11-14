@@ -1,8 +1,8 @@
-import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import PhoneStation from "@/components/phone/PhoneStation";
 import CssPhone from "@/components/phone/CssPhone";
 import SplitReveal from "@/components/SplitReveal";
 import Reveal from "@/components/Reveal";
+import AuditButton from "@/components/AuditButton";
 import { proof } from "@/lib/content";
 
 export default function Hero() {
@@ -13,7 +13,7 @@ export default function Hero() {
         id="top"
         labelledBy="hero-title"
         pose={{ screen: "reel", x: 0.5, y: -0.02, rotX: 0.06, rotY: -0.38, rotZ: 0.05, scale: 1.18 }}
-        className="mx-auto grid min-h-[100dvh] max-w-[1400px] grid-cols-1 items-center gap-12 px-4 pb-10 pt-24 md:px-8 lg:grid-cols-12"
+        className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 pb-10 pt-24 md:px-8 lg:min-h-[100dvh] lg:grid-cols-12 lg:gap-12"
       >
         <div className="lg:col-span-6">
           <Reveal delay={0.1}>
@@ -33,18 +33,20 @@ export default function Hero() {
             <div className="mt-9 flex flex-wrap items-center gap-6">
               <a
                 href="#contact"
+                data-track="cta_start_project"
                 className="inline-flex h-13 items-center rounded-full bg-accent px-8 text-base font-semibold text-on-accent transition-transform duration-300 ease-out-expo hover:-translate-y-0.5 active:translate-y-px"
               >
                 Start a project
               </a>
-              <a href="#work" className="link-draw inline-flex items-center gap-1.5 pb-0.5 text-base text-fg">
-                See case studies <ArrowDown size={16} />
-              </a>
+              <AuditButton className="link-draw inline-flex items-center pb-0.5 text-base text-fg">
+                Or get a free 15-min audit
+              </AuditButton>
             </div>
           </Reveal>
         </div>
         <div className="flex justify-center lg:col-span-6">
-          <CssPhone screen="reel" width={270} />
+          <CssPhone screen="reel" width={200} className="sm:hidden" />
+          <CssPhone screen="reel" width={270} className="hidden sm:block" />
         </div>
       </PhoneStation>
 
