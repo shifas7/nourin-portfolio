@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   BatteryFull,
   CellSignalFull,
@@ -18,6 +19,7 @@ import {
   TrendUp,
   Microphone,
   Plus,
+  Play,
 } from "@phosphor-icons/react";
 import { screenshots, type ScreenId } from "@/lib/content";
 import { useBrief, briefToText } from "@/lib/brief-store";
@@ -48,18 +50,63 @@ function Island() {
   return <div className="absolute left-1/2 top-[11px] z-10 h-[34px] w-[120px] -translate-x-1/2 rounded-full bg-black" />;
 }
 
+const STORIES = [
+  { src: "/images/story-playful.webp", caption: "The first 3 seconds decide everything. Here is how I plan them." },
+  { src: "/images/story-smile.webp", caption: "Meta Ads, reels and SEO for Kerala brands that want enquiries." },
+  { src: "/images/story-desk.webp", caption: "Every campaign starts with one question: what makes you stop scrolling?" },
+];
+const STORY_MS = 4200;
+
+/**
+ * Instagram-style stories: progress bars fill, then the next photo slides in from the
+ * right. Offsets are relative to the active story, so the loop back to the first one
+ * still moves forward; stories not entering or leaving jump without animating.
+ */
 function ReelScreen() {
+  const [active, setActive] = useState(0);
+  const n = STORIES.length;
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => setActive((a) => (a + 1) % n), STORY_MS);
+    return () => window.clearInterval(id);
+  }, [n]);
+
   return (
-    <div className="relative h-full w-full bg-black text-white">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/images/nourin-portrait-480.webp" alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
+    <div className="relative h-full w-full overflow-hidden bg-black text-white">
+      {STORIES.map((s, i) => {
+        const offset = (i - active + n) % n; // 0 = showing, n-1 = just left, else waiting on the right
+        const x = offset === 0 ? "0%" : offset === n - 1 ? "-100%" : "100%";
+        const moving = offset === 0 || offset === n - 1;
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={s.src}
+            src={s.src}
+            alt=""
+            fetchPriority={i === 0 ? "high" : "auto"}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{
+              transform: `translate3d(${x},0,0)`,
+              transition: moving ? "transform 650ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
+            }}
+          />
+        );
+      })}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.45)_0%,rgba(0,0,0,0)_22%,rgba(0,0,0,0)_55%,rgba(0,0,0,0.75)_100%)]" />
       <div className="relative">
         <StatusBar dark />
         <div className="mx-4 mt-2 flex gap-1">
-          {[1, 0.6, 0, 0].map((f, i) => (
-            <span key={i} className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/35">
-              <span className="block h-full bg-white" style={{ width: `${f * 100}%` }} />
+          {STORIES.map((s, i) => (
+            <span key={s.src} className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/35">
+              {i < active && <span className="block h-full w-full bg-white" />}
+              {i === active && (
+                <span
+                  key={`bar-${active}`}
+                  className="story-progress block h-full w-full origin-left bg-white"
+                  style={{ animationDuration: `${STORY_MS}ms` }}
+                />
+              )}
             </span>
           ))}
         </div>
@@ -73,7 +120,9 @@ function ReelScreen() {
           <span className="text-[15px] font-semibold">Nourin Nassar</span>
           <span className="rounded-md border border-white/70 px-2 py-0.5 text-[12px] font-semibold">Follow</span>
         </div>
-        <p className="mt-3 text-[17px] font-semibold leading-snug">The first 3 seconds decide everything. Here is how I plan them.</p>
+        <p key={active} className="story-caption mt-3 text-[17px] font-semibold leading-snug">
+          {STORIES[active].caption}
+        </p>
       </div>
       <div className="absolute bottom-10 right-4 flex flex-col items-center gap-6">
         <Heart size={30} weight="fill" className="text-[#ff5b2e]" />
@@ -225,7 +274,7 @@ function CalendarScreen() {
       <div className="mx-4 mt-4 flex items-center gap-3 rounded-2xl bg-[#111] p-4 text-white">
         <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/nourin-portrait-480.webp" alt="" className="h-full w-full object-cover" />
+          <img src="/images/nourin-smile-thumb.webp" alt="" className="h-full w-full object-cover" />
         </span>
         <span className="leading-tight">
           <span className="block text-[12px] text-white/60">Tomorrow, 7:00 pm</span>
@@ -325,6 +374,125 @@ function SearchScreen() {
   );
 }
 
+function GiveawayScreen() {
+  return (
+    <div className="h-full w-full bg-white text-[#111]">
+      <StatusBar />
+      <div className="flex items-center gap-3 px-4 py-2">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[conic-gradient(from_200deg,#14b8c4,#0b6e8f,#14b8c4)] p-[2px]">
+          <span className="flex h-full w-full items-center justify-center rounded-full bg-white text-[12px] font-black text-[#0b6e8f]">SS</span>
+        </span>
+        <span className="leading-tight">
+          <span className="block text-[15px] font-semibold">Silver Storm</span>
+          <span className="block text-[12px] text-[#5f5f5f]">Athirappilly, Kerala</span>
+        </span>
+      </div>
+      <div className="relative h-[390px] overflow-hidden bg-[linear-gradient(160deg,#5fe0e8_0%,#14a3c4_45%,#0b4f7a_100%)]">
+        <svg aria-hidden viewBox="0 0 390 390" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+          <path d="M0 300 C80 270 150 330 230 300 C300 275 350 310 390 290 L390 390 L0 390 Z" fill="rgba(255,255,255,0.18)" />
+          <path d="M0 330 C90 305 170 360 250 332 C320 310 360 340 390 325 L390 390 L0 390 Z" fill="rgba(255,255,255,0.22)" />
+        </svg>
+        <div className="relative flex h-full flex-col items-center justify-center px-8 text-center text-white">
+          <span className="text-[13px] font-bold uppercase tracking-[0.28em]">Kerala&apos;s</span>
+          <span className="mt-2 text-[44px] font-black uppercase leading-[0.88] tracking-tight">Biggest<br />Giveaway</span>
+          <span className="mt-5 rounded-full bg-white px-4 py-1.5 text-[14px] font-bold text-[#0b4f7a]">Win an iPhone 15 Pro</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-4 px-4 pt-3">
+        <Heart size={26} weight="fill" className="text-[#e0245e]" />
+        <ChatCircle size={26} />
+        <PaperPlaneTilt size={26} />
+        <BookmarkSimple size={26} className="ml-auto" />
+      </div>
+      <p className="px-4 pt-2 text-[14px] leading-snug">
+        <span className="font-semibold">Silver Storm</span> Follow, share and tag your gang. The biggest summer prize in Kerala is
+        waiting.
+      </p>
+      <div className="mx-4 mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-2xl bg-[#f2f6f7] p-3">
+          <p className="text-[12px] text-[#4d5b60]">Impressions</p>
+          <p className="text-[24px] font-bold tracking-tight">8M+</p>
+        </div>
+        <div className="rounded-2xl bg-[#f2f6f7] p-3">
+          <p className="text-[12px] text-[#4d5b60]">New followers</p>
+          <p className="text-[24px] font-bold tracking-tight">+80k</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ChannelScreen() {
+  const tiles = ["#7c2d12", "#1e3a8a", "#831843", "#14532d", "#4c1d95", "#713f12"];
+  return (
+    <div className="h-full w-full bg-[#0f0f12] text-white">
+      <StatusBar dark />
+      <div className="flex items-center gap-3 px-4 pt-2">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ff5b2e] text-[15px] font-black text-[#111113]">A</span>
+        <span className="leading-tight">
+          <span className="block text-[18px] font-bold">Asianet</span>
+          <span className="block text-[12px] text-white/60">Malayalam entertainment, Star Network</span>
+        </span>
+      </div>
+      <div className="mt-4 flex gap-2 overflow-hidden px-4">
+        {["Reels", "Contests", "Live", "Shorts"].map((c, i) => (
+          <span key={c} className={`rounded-full px-3 py-1.5 text-[12px] font-semibold ${i === 0 ? "bg-white text-[#111]" : "bg-white/10 text-white"}`}>
+            {c}
+          </span>
+        ))}
+      </div>
+      <div className="mx-4 mt-4 grid grid-cols-2 gap-3">
+        {[
+          { t: "Star Singer", s: "Season 9", c: "from-[#f59e0b] to-[#b91c1c]" },
+          { t: "Chandrakantham", s: "Serial", c: "from-[#6366f1] to-[#1e1b4b]" },
+        ].map((s) => (
+          <div key={s.t} className={`flex h-[150px] flex-col justify-end rounded-2xl bg-gradient-to-br ${s.c} p-3`}>
+            <p className="text-[17px] font-bold leading-tight">{s.t}</p>
+            <p className="text-[12px] text-white/80">{s.s}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mx-4 mt-5 text-[13px] font-semibold text-white/70">Latest reels</p>
+      <div className="mx-4 mt-2 grid grid-cols-3 gap-1.5">
+        {tiles.map((c, i) => (
+          <div key={i} className="relative h-[120px] rounded-lg" style={{ background: `linear-gradient(170deg, ${c}, #0f0f12)` }}>
+            <Play size={16} weight="fill" className="absolute bottom-2 left-2 text-white/90" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VideosScreen() {
+  const colors = ["#1f2937", "#334155", "#0f766e", "#7c2d12", "#1e3a8a", "#3f3f46", "#14532d", "#581c87", "#9a3412"];
+  return (
+    <div className="h-full w-full bg-white text-[#111]">
+      <StatusBar />
+      <div className="px-5 pt-2">
+        <p className="text-[13px] text-[#5f5f5f]">Content plan</p>
+        <p className="text-[26px] font-bold leading-tight">Indus Go</p>
+        <p className="mt-1 text-[14px] text-[#444]">24 vertical videos, 3 content buckets</p>
+      </div>
+      <div className="mx-4 mt-4 flex gap-2">
+        {["Bucket 1", "Bucket 2", "Bucket 3"].map((b, i) => (
+          <span key={b} className={`flex-1 rounded-full py-2 text-center text-[13px] font-semibold ${i === 0 ? "bg-[#111] text-white" : "bg-[#f1f1ef] text-[#333]"}`}>
+            {b}
+          </span>
+        ))}
+      </div>
+      <div className="mx-4 mt-4 grid grid-cols-3 gap-2">
+        {colors.map((c, i) => (
+          <div key={i} className="relative aspect-[9/16] overflow-hidden rounded-xl" style={{ background: `linear-gradient(165deg, ${c}, #0b0b0e)` }}>
+            <span className="absolute left-2 top-2 rounded bg-black/40 px-1.5 py-0.5 text-[10px] font-semibold text-white">0:{(15 + i * 3).toString().padStart(2, "0")}</span>
+            <Play size={18} weight="fill" className="absolute bottom-2 right-2 text-white" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ChatScreen() {
   const brief = useBrief();
   const text = briefToText(brief);
@@ -369,6 +537,9 @@ function ChatScreen() {
 
 const screens: Record<ScreenId, () => React.ReactElement> = {
   reel: ReelScreen,
+  giveaway: GiveawayScreen,
+  channel: ChannelScreen,
+  videos: VideosScreen,
   lead: LeadScreen,
   analytics: AnalyticsScreen,
   calendar: CalendarScreen,

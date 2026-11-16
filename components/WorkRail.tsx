@@ -4,16 +4,22 @@ import { useLayoutEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cases } from "@/lib/content";
+import { getLenis } from "@/lib/scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/** Height of the sub-bar; case jumps land just below nav (64px) + this bar. */
+const NAV_H = 64;
+const BAR_H = 56;
+
 /**
- * Sticky channel switcher for the case studies. Highlights the case in view and
- * jumps straight to a channel. It sits below the 3D phone layer (z-20 vs z-30) and
- * only as wide as its pills, so it never cuts across the phone.
+ * Channel switcher for the case studies. It is a solid, full-width sub-bar docked
+ * under the nav (not a floating pill), so text never shows through or beside it.
+ * It slides in only while the case studies are on screen.
  */
 export default function WorkRail() {
   const [active, setActive] = useState<string | null>(null);
+  const [shown, setShown] = useState(false);
 
   useLayoutEffect(() => {
     const triggers = cases.map((c) =>
@@ -26,18 +32,48 @@ export default function WorkRail() {
         },
       }),
     );
+    const first = `#work-${cases[0].id}`;
+    const last = `#work-${cases[cases.length - 1].id}`;
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: first,
+        endTrigger: last,
+        start: "top 70%",
+        end: "bottom 30%",
+        onToggle: (self) => setShown(self.isActive),
+      }),
+    );
     return () => triggers.forEach((t) => t.kill());
   }, []);
 
+  const jump = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    const el = document.getElementById(`work-${id}`);
+    if (!el) return;
+    e.preventDefault();
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(el, { offset: -(NAV_H + BAR_H - 1), duration: 1.2 });
+    else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - (NAV_H + BAR_H - 1) });
+    history.replaceState(null, "", `#work-${id}`);
+  };
+
   return (
-    <nav aria-label="Case studies by channel" className="sticky top-[76px] z-20 py-2">
-      <ul className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-bg/85 p-1 backdrop-blur-md [scrollbar-width:none]">
+    <nav
+      aria-label="Case studies by channel"
+      aria-hidden={!shown}
+      className={`fixed inset-x-0 top-16 z-[35] border-b border-line bg-bg/95 backdrop-blur-md transition-[transform,opacity] duration-500 ease-out-expo ${
+        shown ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"
+      }`}
+      style={{ height: BAR_H }}
+    >
+      <ul className="mx-auto flex h-full max-w-[1400px] items-center gap-1 overflow-x-auto px-4 [scrollbar-width:none] md:px-8">
         {cases.map((c) => {
           const on = active === c.id;
           return (
             <li key={c.id} className="shrink-0">
               <a
                 href={`#work-${c.id}`}
+                onClick={(e) => jump(e, c.id)}
+                tabIndex={shown ? 0 : -1}
                 aria-current={on ? "true" : undefined}
                 className={`inline-flex h-9 items-center rounded-full px-4 text-[14px] transition-colors duration-300 ${
                   on ? "bg-fg text-bg" : "text-muted hover:text-fg"

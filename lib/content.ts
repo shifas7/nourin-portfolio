@@ -9,12 +9,22 @@ export const profile = {
   role: "Digital Marketer",
   location: "Ernakulam, Kerala",
   email: "nourinnassar10@gmail.com",
-  linkedin: "https://www.linkedin.com/in/nourin-nassar",
+  linkedin: "https://www.linkedin.com/in/nourin-nassar-680114258/",
   /** Optional: digits only with country code, e.g. "917736064255". Leave empty to hide the WhatsApp button. */
   whatsapp: "",
 };
 
-export type ScreenId = "reel" | "lead" | "analytics" | "calendar" | "map" | "search" | "chat";
+export type ScreenId =
+  | "reel"
+  | "giveaway"
+  | "channel"
+  | "videos"
+  | "lead"
+  | "analytics"
+  | "calendar"
+  | "map"
+  | "search"
+  | "chat";
 
 /**
  * Real screenshots for the phone. Drop a 390x844 (or any 9:19.5) image into
@@ -22,18 +32,51 @@ export type ScreenId = "reel" | "lead" | "analytics" | "calendar" | "map" | "sea
  * Blur client names you are not allowed to show.
  */
 export const screenshots: Partial<Record<ScreenId, string>> = {
+  // giveaway: "/images/screens/silver-storm-giveaway.jpg",
+  // channel: "/images/screens/asianet.jpg",
+  // videos: "/images/screens/indus-go.jpg",
   // lead: "/images/screens/meta-lead-ad.jpg",
-  // analytics: "/images/screens/analytics.jpg",
-  // calendar: "/images/screens/content-calendar.jpg",
   // map: "/images/screens/business-profile.jpg",
   // search: "/images/screens/search-result.jpg",
 };
 
+/**
+ * Brands from Nourin's Canva portfolio ("Clients worked with me").
+ * logo: path under public/images/clients/. Brands without a logo show their name.
+ */
+export type Client = {
+  id: string;
+  name: string;
+  logo?: string;
+  /** Logo is only an icon, so show the name beside it. */
+  withName?: boolean;
+  /** Squarish logos get a taller box so they balance with wide ones. */
+  square?: boolean;
+  /** Tile colour for logos designed for a dark background. */
+  dark?: boolean;
+  /** In-page anchor of the work done for this client (case study or campaigns). */
+  work?: string;
+  instagram?: string;
+};
+
+export const clients: Client[] = [
+  { id: "silverstorm", name: "Silver Storm", logo: "/images/clients/silverstorm.webp", square: true, work: "#work-silverstorm", instagram: "https://www.instagram.com/silverstorm.in/" },
+  { id: "asianet", name: "Asianet", logo: "/images/clients/asianet.webp", square: true, work: "#work-asianet", instagram: "https://www.instagram.com/asianet/" },
+  { id: "jotun", name: "Jotun Paints", logo: "/images/clients/jotun.svg", instagram: "https://www.instagram.com/jotunpaintsindia/" },
+  { id: "centresquare", name: "Centre Square Mall", logo: "/images/clients/centresquare.webp", withName: true, work: "#campaigns-centresquare", instagram: "https://www.instagram.com/centresquarekochi/" },
+  { id: "marketcity", name: "Marketcity Mall", instagram: "https://www.instagram.com/marketcity_mall/" },
+  { id: "indusgo", name: "Indus Go", logo: "/images/clients/indusgo.svg", dark: true, work: "#work-indusgo", instagram: "https://www.instagram.com/indusgo.in/" },
+  { id: "zephyr", name: "Zephyr Windows & Doors", instagram: "https://www.instagram.com/zephyrwindowsanddoors/" },
+  { id: "kamal", name: "Kamal Agencies", logo: "/images/clients/kamal.webp", instagram: "https://www.instagram.com/kamalagencieskodungallur/" },
+  { id: "homework", name: "Homework Living", logo: "/images/clients/homework.webp", instagram: "https://www.instagram.com/homeworkliving/" },
+  { id: "kalliyath", name: "Kalliyath TMT", logo: "/images/clients/kalliyath.webp", instagram: "https://www.instagram.com/kalliyathgroup/" },
+];
+
 export const proof = [
   { value: "₹10 Cr+", label: "in leads for jewellery clients through Meta Ads, in one quarter" },
+  { value: "8M+", label: "impressions from Silver Storm's “Kerala's Biggest Giveaway”" },
+  { value: "+80k", label: "Instagram followers for Silver Storm from the same campaign" },
   { value: "+30%", label: "website traffic for agency clients at Moonchild Media" },
-  { value: "+20%", label: "more leads from the same accounts" },
-  { value: "4 yrs", label: "across four Kochi agencies, from social to search" },
 ];
 
 export type CaseStudy = {
@@ -46,9 +89,33 @@ export type CaseStudy = {
   did: string;
   result: string;
   resultValue?: string;
+  /** Link to the live campaign post. */
+  post?: string;
 };
 
 export const cases: CaseStudy[] = [
+  {
+    id: "silverstorm",
+    screen: "giveaway",
+    client: "Silver Storm Water Theme Park, Athirappilly",
+    service: "Influencer campaign",
+    title: "Kerala's Biggest Giveaway",
+    brief: "Grow Silver Storm's social presence and bring more visitors through the gates.",
+    did: "Built the campaign around an iPhone 15 Pro giveaway and pushed it through influencer marketing across Kerala.",
+    resultValue: "8M+",
+    result: "impressions and 80k new Instagram followers, as reported.",
+    post: "https://www.instagram.com/p/Cvpq1qDh0uA/",
+  },
+  {
+    id: "asianet",
+    screen: "channel",
+    client: "Asianet, Star Network",
+    service: "Social media partner",
+    title: "Prime time, on every feed",
+    brief: "Help a leading Malayalam channel stand out online with shows like Star Singer Season 9 and Chandrakantham.",
+    did: "Ran a mix of reels, contests, live sessions and short clips from the shows, all checked against platform content policies.",
+    result: "Views, watch time, subscribers and engagement all rose over the partnership, as reported.",
+  },
   {
     id: "jewellery",
     screen: "lead",
@@ -61,25 +128,15 @@ export const cases: CaseStudy[] = [
     result: "in leads within one quarter, as reported.",
   },
   {
-    id: "traffic",
-    screen: "analytics",
-    client: "Agency clients, Moonchild Media",
-    service: "Digital strategy",
-    title: "More visits, more leads",
-    brief: "Client websites were not getting the traffic or the enquiries their brands deserved.",
-    did: "Planned the digital strategy, led a team of specialists and kept every campaign on schedule.",
-    resultValue: "+30%",
-    result: "website traffic and +20% lead generation, as reported.",
-  },
-  {
-    id: "content",
-    screen: "calendar",
-    client: "Agency clients",
-    service: "Content and reels",
-    title: "A feed worth stopping for",
-    brief: "Brands posted when they remembered, so feeds went quiet and reels never got made.",
-    did: "Concepted and made reels and short-form video, and planned every client's month ahead on a calendar.",
-    result: "Consistent monthly calendars for every account she ran.",
+    id: "indusgo",
+    screen: "videos",
+    client: "Indus Go",
+    service: "Video content",
+    title: "24 videos, made for vertical",
+    brief: "Create content for the Indus Go brand that people would actually watch on their phones.",
+    did: "Proposed an experimental vertical-video concept, then planned and shot 24 videos across three content buckets.",
+    resultValue: "24",
+    result: "vertical videos that drove engagement for the brand.",
   },
   {
     id: "local",
@@ -100,6 +157,44 @@ export const cases: CaseStudy[] = [
     brief: "Sites needed organic visibility, including content for a UAE audience.",
     did: "Grouped keyword research into topic clusters, wrote FAQ-led content, ran technical audits and added structured data.",
     result: "Content mapped to search intent and tracked in Search Console.",
+  },
+];
+
+/** Campaign archive from the Canva portfolio, grouped by brand, with links to the live posts. */
+export type Campaign = { name: string; note?: string; post?: string };
+
+export const campaigns: { id: string; brand: string; instagram: string; items: Campaign[] }[] = [
+  {
+    id: "silverstorm",
+    brand: "Silver Storm Water Theme Park",
+    instagram: "https://www.instagram.com/silverstorm.in/",
+    items: [
+      { name: "Summer Vere Level", note: "Positioned the park as the summer getaway to beat the heat.", post: "https://www.instagram.com/p/CqhFd0NPl_d/" },
+      { name: "Thrillodu Thrill", note: "School-reopening and monsoon push that kept visitors coming off-season.", post: "https://www.instagram.com/p/Cs_KNMnvnVp/" },
+      { name: "Valiya Perunnal Valiya Aavesham", note: "Bakrid family contest that rewarded the largest family group.", post: "https://www.instagram.com/p/Ct1bkyxvDV1/" },
+      { name: "Onam Aaveshappooram", note: "Onam celebrations with live shows and sadya on a banana leaf.", post: "https://www.instagram.com/p/Cv_4bNnP2FM/" },
+      { name: "Winter Fest", note: "Park, Snow Storm and resort themed for winter, with shows, processions, bands and festive photo booths. One of the biggest campaigns I ran for Silver Storm.", post: "https://www.instagram.com/p/C0ga5zrPuxe/" },
+    ],
+  },
+  {
+    id: "centresquare",
+    brand: "Centre Square Mall",
+    instagram: "https://www.instagram.com/centresquarekochi/",
+    items: [
+      { name: "Summer of Fashion", post: "https://www.instagram.com/p/CqarXW2LUgP/" },
+      { name: "Wings of Love", post: "https://www.instagram.com/p/Coe7q_9vmaV/" },
+      { name: "Magical May", post: "https://www.instagram.com/p/Crqdxs7tqJ-/" },
+      { name: "Underground Concert", post: "https://www.instagram.com/p/Cs_SgbNustn/" },
+    ],
+  },
+  {
+    id: "asianet",
+    brand: "Asianet",
+    instagram: "https://www.instagram.com/asianet/",
+    items: [
+      { name: "Star Singer Season 9", post: "https://www.instagram.com/p/C03b9ozNmA_/" },
+      { name: "Chandrakantham", post: "https://www.instagram.com/p/C1j4AyMqCKr/" },
+    ],
   },
 ];
 
@@ -157,7 +252,7 @@ export const services: Service[] = [
     name: "Social media and reels",
     goodFor: "Brands whose feed has gone quiet.",
     includes: ["Content strategy", "Monthly calendars", "Reels and short-form", "Influencer coordination"],
-    caseId: "content",
+    caseId: "silverstorm",
     seoTitle: "Social Media Marketing and Reels in Kochi",
     seoDescription:
       "Content strategy, monthly calendars, reels and influencer coordination for Kerala brands, from Kochi digital marketer Nourin Nassar.",

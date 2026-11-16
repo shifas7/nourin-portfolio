@@ -109,9 +109,18 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+/* In the base layer so utilities like focus-visible:outline-none can override it. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Native dropdown lists: explicit theme colours, or dark mode shows light text on white. */
+  select option {
+    background-color: var(--panel);
+    color: var(--fg);
+  }
 }
 
 .link-draw {
@@ -168,4 +177,32 @@ article[id] {
   content: "";
   position: absolute;
   inset: -12px -6px;
+}
+
+/* Story player: progress bar fill and caption swap. */
+@keyframes story-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.story-progress {
+  animation-name: story-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes story-caption {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.story-caption {
+  animation: story-caption 0.6s var(--ease-out-expo) both;
 }

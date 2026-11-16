@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import PhoneStation from "@/components/phone/PhoneStation";
 import CssPhone from "@/components/phone/CssPhone";
 import SplitReveal from "@/components/SplitReveal";
@@ -10,7 +11,7 @@ export default function CaseStudies() {
       <PhoneStation pose={{ screen: "reel", x: 0.5, rotY: -0.5, rotX: 0.1, rotZ: 0.06, scale: 0.95 }} className="pb-10 pt-10 lg:w-[56%]">
         <SplitReveal
           id="work-title"
-          text="Five briefs. Five channels. Real numbers."
+          text="Real brands. Real briefs. Real numbers."
           className="font-display text-[clamp(2.6rem,5.4vw,5.2rem)] leading-[0.95] text-fg [text-wrap:balance]"
         />
         <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted">
@@ -37,7 +38,7 @@ export default function CaseStudies() {
               rotZ: flip ? -0.03 : 0.03,
               scale: 1.02,
             }}
-            className="grid min-h-[100dvh] grid-cols-1 items-center gap-10 border-t border-line py-20 lg:grid-cols-12 lg:py-0"
+            className="grid min-h-[100dvh] grid-cols-1 items-center gap-10 border-t border-line pb-20 pt-36 lg:grid-cols-12 lg:pb-12"
           >
             <div className={`lg:col-span-5 ${flip ? "lg:col-start-8" : "lg:col-start-1"}`}>
               <p className="text-[15px] text-muted">
@@ -66,6 +67,17 @@ export default function CaseStudies() {
                   </dd>
                 </div>
               </dl>
+              {c.post && (
+                <a
+                  href={c.post}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-track="outbound_campaign_post"
+                  className="tap link-draw mt-6 inline-flex items-center gap-1 pb-0.5 text-[15px] font-medium text-accent-ink"
+                >
+                  See the campaign post <ArrowUpRight size={14} />
+                </a>
+              )}
             </div>
 
             <div className={`flex justify-center lg:col-span-5 ${flip ? "lg:col-start-1 lg:row-start-1" : "lg:col-start-8"}`}>

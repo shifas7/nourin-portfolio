@@ -13,11 +13,11 @@ export default function About() {
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-panel lg:col-span-5">
         <Image
-          src="/images/nourin-square-900.webp"
-          alt="Nourin Nassar smiling at her desk"
+          src="/images/nourin-about.webp"
+          alt="Nourin Nassar smiling in sunglasses and a pink scarf"
           fill
           sizes="(min-width: 1024px) 40vw, 100vw"
-          className="object-cover object-[50%_30%]"
+          className="object-cover object-top"
         />
       </div>
 
@@ -26,8 +26,8 @@ export default function About() {
           Hi, I&apos;m Nourin.
         </h2>
         <p className="mt-6 max-w-[48ch] text-lg leading-relaxed text-muted">
-          I studied journalism and PR, then spent four years inside Kochi agencies running social, paid and search for
-          brands of every size. I care most about one number: how many people put their hand up and ask.
+          I studied journalism and PR, then spent four years inside Kochi agencies running social, paid and search for brands
+          like Asianet, Silver Storm and Jotun Paints. I care most about one number: how many people put their hand up and ask.
         </p>
 
         <ul className="mt-10 border-t border-line">
