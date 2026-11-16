@@ -11,7 +11,7 @@ import {
   STOP_AFTER_MS,
   prefersReducedMotion,
 } from "@/lib/velocity";
-import { setLenis } from "@/lib/scroll";
+import { setLenis, scrollToHash } from "@/lib/scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,7 +25,7 @@ export default function SmoothScroll() {
     let lenis: Lenis | null = null;
 
     if (!reduce) {
-      lenis = new Lenis({ lerp: 0.1, anchors: { offset: -84 } });
+      lenis = new Lenis({ lerp: 0.1 });
       lenis.on("scroll", ScrollTrigger.update);
       setLenis(lenis);
     }
@@ -59,6 +59,16 @@ export default function SmoothScroll() {
     };
     gsap.ticker.add(tick);
 
+    // Every in-page link goes through one handler, so offsets are always consistent.
+    const onAnchorClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.('a[href^="#"]') as HTMLAnchorElement | null;
+      const hash = a?.getAttribute("href");
+      if (!hash || hash.length < 2) return;
+      if (scrollToHash(hash)) e.preventDefault();
+    };
+    document.addEventListener("click", onAnchorClick);
+
     // Fitted display type resizes once web fonts arrive; recompute trigger positions.
     const refresh = () => ScrollTrigger.refresh();
     document.fonts?.ready.then(() => requestAnimationFrame(refresh));
@@ -66,6 +76,7 @@ export default function SmoothScroll() {
     const late = window.setTimeout(refresh, 1500);
 
     return () => {
+      document.removeEventListener("click", onAnchorClick);
       window.removeEventListener("load", refresh);
       window.clearTimeout(late);
       gsap.ticker.remove(raf);

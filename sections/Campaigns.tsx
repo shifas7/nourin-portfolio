@@ -45,10 +45,9 @@ export default function Campaigns() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-track="outbound_campaign_post"
-                      aria-label={`View the ${item.name} post on Instagram`}
                       className="tap link-draw mt-2 inline-flex items-center gap-1 pb-0.5 text-[14px] font-medium text-accent-ink"
                     >
-                      View post <ArrowUpRight size={13} />
+                      View post<span className="sr-only">: {item.name} on Instagram</span> <ArrowUpRight size={13} />
                     </a>
                   )}
                 </li>

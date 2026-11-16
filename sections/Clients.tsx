@@ -4,12 +4,6 @@ import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import PhoneStation from "@/components/phone/PhoneStation";
 import { clients, type Client } from "@/lib/content";
-import { getLenis } from "@/lib/scroll";
-
-/** Nav (64px), plus the case-study sub-bar (56px) when landing inside the work section. */
-function offsetFor(hash: string) {
-  return hash.startsWith("#work-") ? 64 + 56 + 8 : 64 + 16;
-}
 
 function Logo({ c }: { c: Client }) {
   if (!c.logo) {
@@ -33,7 +27,7 @@ function Logo({ c }: { c: Client }) {
         alt={c.name}
         fill
         unoptimized={c.logo.endsWith(".svg")}
-        sizes="(min-width: 1024px) 220px, 45vw"
+        sizes="(min-width: 1024px) 200px, (min-width: 640px) 30vw, 45vw"
         className="object-contain"
       />
     </span>
@@ -46,17 +40,6 @@ function Logo({ c }: { c: Client }) {
  * feed, the brand's Instagram. A small label says which, so clicks are never a surprise.
  */
 export default function Clients() {
-  const jump = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
-    const el = document.querySelector<HTMLElement>(hash);
-    if (!el) return;
-    e.preventDefault();
-    const top = el.getBoundingClientRect().top + window.scrollY - offsetFor(hash);
-    const lenis = getLenis();
-    if (lenis) lenis.scrollTo(top, { duration: 1.3 });
-    else window.scrollTo({ top });
-    history.replaceState(null, "", hash);
-  };
-
   return (
     <PhoneStation
       as="section"
@@ -84,8 +67,6 @@ export default function Clients() {
                     href={href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    onClick={c.work ? (e) => jump(e, c.work!) : undefined}
-                    aria-label={c.work ? `${c.name}: see the work` : `${c.name} on Instagram`}
                     data-track={c.work ? "client_to_work" : "outbound_client_instagram"}
                     className={`${tile} hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgb(17_17_19/0.35)]`}
                   >
@@ -99,6 +80,7 @@ export default function Clients() {
                     >
                       {label}
                       {c.work ? <ArrowDownRight size={12} /> : <ArrowUpRight size={12} />}
+                      {external && <span className="sr-only"> (opens in a new tab)</span>}
                     </span>
                   </a>
                 ) : (

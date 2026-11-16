@@ -51,7 +51,8 @@ const jsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
-      <body>
+      {/* Browser extensions (e.g. ColorZilla) add attributes to <body> before React loads. */}
+      <body suppressHydrationWarning>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <a
           href="#main-content"

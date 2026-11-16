@@ -4,12 +4,10 @@ import { useLayoutEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cases } from "@/lib/content";
-import { getLenis } from "@/lib/scroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Height of the sub-bar; case jumps land just below nav (64px) + this bar. */
-const NAV_H = 64;
+/** Height of the sub-bar (lib/scroll.ts uses the same value for jump offsets). */
 const BAR_H = 56;
 
 /**
@@ -46,16 +44,6 @@ export default function WorkRail() {
     return () => triggers.forEach((t) => t.kill());
   }, []);
 
-  const jump = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    const el = document.getElementById(`work-${id}`);
-    if (!el) return;
-    e.preventDefault();
-    const lenis = getLenis();
-    if (lenis) lenis.scrollTo(el, { offset: -(NAV_H + BAR_H - 1), duration: 1.2 });
-    else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - (NAV_H + BAR_H - 1) });
-    history.replaceState(null, "", `#work-${id}`);
-  };
-
   return (
     <nav
       aria-label="Case studies by channel"
@@ -72,7 +60,6 @@ export default function WorkRail() {
             <li key={c.id} className="shrink-0">
               <a
                 href={`#work-${c.id}`}
-                onClick={(e) => jump(e, c.id)}
                 tabIndex={shown ? 0 : -1}
                 aria-current={on ? "true" : undefined}
                 className={`inline-flex h-9 items-center rounded-full px-4 text-[14px] transition-colors duration-300 ${

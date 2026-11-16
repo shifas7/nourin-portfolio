@@ -64,7 +64,23 @@ const STORY_MS = 4200;
  */
 function ReelScreen() {
   const [active, setActive] = useState(0);
+  // Only the first story loads up front; the rest wait until the page has loaded,
+  // so they never compete with the hero image for bandwidth.
+  const [loadRest, setLoadRest] = useState(false);
   const n = STORIES.length;
+
+  useEffect(() => {
+    let t = 0;
+    const go = () => {
+      t = window.setTimeout(() => setLoadRest(true), 600);
+    };
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+    return () => {
+      window.removeEventListener("load", go);
+      window.clearTimeout(t);
+    };
+  }, []);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -75,6 +91,7 @@ function ReelScreen() {
   return (
     <div className="relative h-full w-full overflow-hidden bg-black text-white">
       {STORIES.map((s, i) => {
+        if (i > 0 && !loadRest) return null;
         const offset = (i - active + n) % n; // 0 = showing, n-1 = just left, else waiting on the right
         const x = offset === 0 ? "0%" : offset === n - 1 ? "-100%" : "100%";
         const moving = offset === 0 || offset === n - 1;

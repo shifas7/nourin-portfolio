@@ -45,8 +45,7 @@ export default function Hero() {
           </Reveal>
         </div>
         <div className="flex justify-center lg:col-span-6">
-          <CssPhone screen="reel" width={200} className="sm:hidden" />
-          <CssPhone screen="reel" width={270} className="hidden sm:block" />
+          <CssPhone screen="reel" width={200} smWidth={270} eager />
         </div>
       </PhoneStation>
 

@@ -206,3 +206,15 @@ article[id] {
 .story-caption {
   animation: story-caption 0.6s var(--ease-out-expo) both;
 }
+
+/* Flat phones: size from --pw, skip layout and paint while off screen. */
+.css-phone {
+  --pw: var(--pw-base);
+  content-visibility: auto;
+  contain-intrinsic-size: auto calc(var(--pw) * 1px + 18px) calc(var(--pw) * 2.164px + 18px);
+}
+@media (min-width: 640px) {
+  .css-phone-responsive {
+    --pw: var(--pw-sm);
+  }
+}
