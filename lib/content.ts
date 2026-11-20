@@ -378,6 +378,4 @@ export const credentials = [
 
 export const briefOptions = {
   services: ["Free 15-min audit", "Meta Ads", "Social and reels", "SEO", "Local search", "Not sure yet"],
-  budgets: ["Under ₹25k / month", "₹25k to ₹1L / month", "₹1L to ₹3L / month", "Over ₹3L / month"],
-  timelines: ["As soon as possible", "This month", "Next quarter"],
 };

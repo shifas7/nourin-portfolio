@@ -9,7 +9,7 @@ import { profile, briefOptions } from "@/lib/content";
 import { updateBrief, useBrief, briefToText } from "@/lib/brief-store";
 import { track } from "@/lib/track";
 
-type Errors = Partial<Record<"name" | "email" | "services", string>>;
+type Errors = Partial<Record<"name" | "email", string>>;
 
 const field =
   "h-13 w-full rounded-2xl border border-line bg-transparent px-5 text-fg placeholder:text-muted transition-colors focus:border-accent focus:outline-none focus-visible:outline-none";
@@ -34,17 +34,15 @@ export default function Contact() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const next: Errors = {};
-    if (!brief.services.length) next.services = "Pick at least one, or choose Not sure yet.";
     if (!brief.name.trim()) next.name = "Add your name so I know who to reply to.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brief.email)) next.email = "Add an email address I can reply to.";
     setErrors(next);
-    if (next.services) return document.querySelector<HTMLElement>(`#${CSS.escape(uid)}-services button`)?.focus();
     if (next.name) return document.getElementById(`${uid}-name`)?.focus();
     if (next.email) return document.getElementById(`${uid}-email`)?.focus();
 
-    const subject = `New project: ${brief.services.join(", ")}${brief.company ? ` for ${brief.company}` : ""}`;
+    const subject = brief.services.length ? `New project: ${brief.services.join(", ")}` : `New project from ${brief.name.trim()}`;
     const body = `${briefToText(brief)}\n\nReply to: ${brief.email}`;
-    track("generate_lead", { services: brief.services.join(", "), budget: brief.budget || "not set" });
+    track("generate_lead", { services: brief.services.join(", ") || "not set" });
     window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
@@ -70,7 +68,9 @@ export default function Contact() {
 
         <form noValidate onSubmit={submit} className="mt-12 grid gap-8">
           <fieldset>
-            <legend className="font-medium text-fg">What do you need help with?</legend>
+            <legend className="font-medium text-fg">
+              What do you need help with? <span className="font-normal text-muted">(optional)</span>
+            </legend>
             <div id={`${uid}-services`} className="mt-3 flex flex-wrap gap-2">
               {briefOptions.services.map((s) => {
                 const on = brief.services.includes(s);
@@ -91,43 +91,7 @@ export default function Contact() {
                 );
               })}
             </div>
-            {errors.services && <p className="mt-2 text-sm text-accent-ink">{errors.services}</p>}
           </fieldset>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <label htmlFor={`${uid}-budget`} className="font-medium text-fg">
-                Monthly budget
-              </label>
-              <select
-                id={`${uid}-budget`}
-                value={brief.budget}
-                onChange={(e) => updateBrief({ budget: e.target.value })}
-                className={`${field} cursor-pointer`}
-              >
-                <option value="">Choose a range</option>
-                {briefOptions.budgets.map((b) => (
-                  <option key={b}>{b}</option>
-                ))}
-              </select>
-            </div>
-            <div className="grid gap-2">
-              <label htmlFor={`${uid}-timeline`} className="font-medium text-fg">
-                When do you want to start?
-              </label>
-              <select
-                id={`${uid}-timeline`}
-                value={brief.timeline}
-                onChange={(e) => updateBrief({ timeline: e.target.value })}
-                className={`${field} cursor-pointer`}
-              >
-                <option value="">Choose a timeline</option>
-                {briefOptions.timelines.map((t) => (
-                  <option key={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-          </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="grid gap-2">
@@ -150,51 +114,38 @@ export default function Contact() {
               )}
             </div>
             <div className="grid gap-2">
-              <label htmlFor={`${uid}-company`} className="font-medium text-fg">
-                Brand or business
+              <label htmlFor={`${uid}-email`} className="font-medium text-fg">
+                Email
               </label>
               <input
-                id={`${uid}-company`}
-                value={brief.company}
-                onChange={(e) => updateBrief({ company: e.target.value })}
-                autoComplete="organization"
+                id={`${uid}-email`}
+                type="email"
+                value={brief.email}
+                onChange={(e) => updateBrief({ email: e.target.value })}
+                autoComplete="email"
+                placeholder="you@yourbrand.com"
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? `${uid}-email-err` : undefined}
                 className={field}
               />
+              {errors.email && (
+                <p id={`${uid}-email-err`} className="text-sm text-accent-ink">
+                  {errors.email}
+                </p>
+              )}
             </div>
           </div>
 
           <div className="grid gap-2">
-            <label htmlFor={`${uid}-email`} className="font-medium text-fg">
-              Email
-            </label>
-            <input
-              id={`${uid}-email`}
-              type="email"
-              value={brief.email}
-              onChange={(e) => updateBrief({ email: e.target.value })}
-              autoComplete="email"
-              placeholder="you@yourbrand.com"
-              aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? `${uid}-email-err` : undefined}
-              className={field}
-            />
-            {errors.email && (
-              <p id={`${uid}-email-err`} className="text-sm text-accent-ink">
-                {errors.email}
-              </p>
-            )}
-          </div>
-
-          <div className="grid gap-2">
             <label htmlFor={`${uid}-message`} className="font-medium text-fg">
-              Anything else
+              Message
             </label>
             <textarea
               id={`${uid}-message`}
-              rows={3}
+              rows={4}
               value={brief.message}
               onChange={(e) => updateBrief({ message: e.target.value })}
-              placeholder="What has worked before, what has not, links to your pages."
+              placeholder="Tell me about your brand and what you want more of."
               className="w-full resize-y rounded-2xl border border-line bg-transparent px-5 py-4 text-fg placeholder:text-muted focus:border-accent focus:outline-none focus-visible:outline-none"
             />
           </div>
