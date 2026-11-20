@@ -11,11 +11,11 @@ function Logo({ c }: { c: Client }) {
   }
   if (c.withName) {
     return (
-      <span className="flex flex-col items-center gap-2">
-        <span className="relative h-11 w-14">
+      <span className="flex flex-col items-center gap-1.5 sm:gap-2">
+        <span className="relative h-8 w-10 sm:h-11 sm:w-14">
           <Image src={c.logo} alt="" fill sizes="56px" className="object-contain" />
         </span>
-        <span className="text-center text-[15px] font-semibold leading-tight text-[#111113]">{c.name}</span>
+        <span className="text-center text-[13px] font-semibold leading-tight text-[#111113] sm:text-[15px]">{c.name}</span>
       </span>
     );
   }
@@ -27,7 +27,7 @@ function Logo({ c }: { c: Client }) {
         alt={c.name}
         fill
         unoptimized={c.logo.endsWith(".svg")}
-        sizes="(min-width: 1024px) 200px, (min-width: 640px) 30vw, 45vw"
+        sizes="(min-width: 1280px) 200px, (min-width: 1024px) 22vw, (min-width: 640px) 30vw, 45vw"
         className="object-contain"
       />
     </span>
@@ -52,18 +52,20 @@ export default function Clients() {
         <h2 id="clients-title" className="text-[15px] text-muted">
           Brands I&apos;ve worked with
         </h2>
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {clients.map((c) => {
             const href = c.work ?? c.instagram;
             const external = !c.work && !!c.instagram;
-            const tile = `group relative flex aspect-[3/2] flex-col items-center justify-center rounded-[20px] px-6 ring-1 transition-[transform,box-shadow] duration-300 ease-out-expo ${
+            const tile = `group relative flex aspect-[3/2] flex-col items-center justify-center rounded-[20px] px-3 ring-1 sm:px-6 transition-[transform,box-shadow] duration-300 ease-out-expo ${
               c.dark ? "bg-[#0d0d0d] ring-white/10" : "bg-white ring-black/5"
             }`;
+            const style = c.tile ? { backgroundColor: c.tile } : undefined;
             const label = c.work ? "See the work" : "Instagram";
             return (
               <li key={c.id}>
                 {href ? (
                   <a
+                    style={style}
                     href={href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
@@ -84,7 +86,7 @@ export default function Clients() {
                     </span>
                   </a>
                 ) : (
-                  <div className={tile}>
+                  <div className={tile} style={style}>
                     <Logo c={c} />
                   </div>
                 )}
