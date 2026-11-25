@@ -43,8 +43,9 @@ export const screenshots: Partial<Record<ScreenId, string>> = {
 /**
  * Brands Nourin has worked with.
  * logo: path under public/images/clients/. Brands without a logo show their name.
- * Order matters: the best-known names (Asianet, Jotun, the jewellers, Silver Storm)
- * come first so they fill the top row at every grid width.
+ * Order matters: the grid is 6 across on desktop, so the first six fill the top row
+ * and the last six the bottom row. Wide tiles count as two; keep the total of
+ * spaces (singles + 2 × wide) a multiple of 6 so every row stays full.
  */
 export type Client = {
   id: string;
@@ -54,6 +55,8 @@ export type Client = {
   withName?: boolean;
   /** Squarish logos get a taller box so they balance with wide ones. */
   square?: boolean;
+  /** Tile spans two columns. Used to keep every row full; see Clients.tsx. */
+  wide?: boolean;
   /** Logo is light, so the tile is dark (near-black unless `tile` sets a colour). */
   dark?: boolean;
   /** Tile background, for logos that sit on their own brand colour. */
@@ -64,32 +67,38 @@ export type Client = {
 };
 
 export const clients: Client[] = [
-  // Top row: the names visitors recognise first.
+  // First row (6 across on desktop).
   { id: "asianet", name: "Asianet", logo: "/images/clients/asianet.webp", square: true, work: "#work-asianet", instagram: "https://www.instagram.com/asianet/" },
-  { id: "jotun", name: "Jotun Paints", logo: "/images/clients/jotun.svg", instagram: "https://www.instagram.com/jotunpaintsindia/" },
-  { id: "pereppadans", name: "Pereppadans Gold & Diamonds", logo: "/images/clients/pereppadans.webp" },
-  { id: "leos", name: "Leo's Gold & Diamonds", logo: "/images/clients/leos.webp", square: true },
-  { id: "silverstorm", name: "Silver Storm", logo: "/images/clients/silverstorm.webp", square: true, work: "#work-silverstorm", instagram: "https://www.instagram.com/silverstorm.in/" },
   { id: "nakshatra", name: "Nakshatra Gold & Diamonds", logo: "/images/clients/nakshatra.webp" },
-
-  { id: "pooja", name: "Pooja Silver Square", logo: "/images/clients/pooja.webp", square: true, dark: true, tile: "#1a6680" },
-  { id: "indusgo", name: "Indus Go", logo: "/images/clients/indusgo.svg", dark: true, work: "#work-indusgo", instagram: "https://www.instagram.com/indusgo.in/" },
-  { id: "centresquare", name: "Centre Square Mall", logo: "/images/clients/centresquare.webp", withName: true, work: "#campaigns-centresquare", instagram: "https://www.instagram.com/centresquarekochi/" },
-  { id: "palette", name: "Palette Hotels & Resorts", logo: "/images/clients/palette.webp" },
-  { id: "channel27", name: "Channel 27", logo: "/images/clients/channel27.webp", square: true },
-  { id: "marketcity", name: "Marketcity Mall", instagram: "https://www.instagram.com/marketcity_mall/" },
-  { id: "kalliyath", name: "Kalliyath TMT", logo: "/images/clients/kalliyath.webp", instagram: "https://www.instagram.com/kalliyathgroup/" },
   { id: "arabiansignature", name: "Arabian Signature Boutique", logo: "/images/clients/arabiansignature.webp", dark: true, tile: "#5d0000" },
-  { id: "vedic", name: "Vedic Village Kodungallur", logo: "/images/clients/vedic.webp", square: true },
-  { id: "marikar", name: "Marikar Interiors", logo: "/images/clients/marikar.webp" },
+  { id: "centresquare", name: "Centre Square Mall", logo: "/images/clients/centresquare.webp", withName: true, work: "#campaigns-centresquare", instagram: "https://www.instagram.com/centresquarekochi/" },
+  { id: "silverstorm", name: "Silver Storm", logo: "/images/clients/silverstorm.webp", square: true, work: "#work-silverstorm", instagram: "https://www.instagram.com/silverstorm.in/" },
+  { id: "leos", name: "Leo's Gold & Diamonds", logo: "/images/clients/leos.webp", square: true },
+
+  // Middle: 15 logos, three of them wide, make three full rows of 6.
+  { id: "jotun", name: "Jotun Paints", logo: "/images/clients/jotun.svg", wide: true, instagram: "https://www.instagram.com/jotunpaintsindia/" },
+  { id: "pooja", name: "Pooja Silver Square", logo: "/images/clients/pooja.webp", square: true, dark: true, tile: "#1a6680" },
+  { id: "pereppadans", name: "Pereppadans Gold & Diamonds", logo: "/images/clients/pereppadans.webp", wide: true },
+  { id: "maharani", name: "Kallarakkal Maharani Jewellers", logo: "/images/clients/maharani.webp" },
+  { id: "indusgo", name: "Indus Go", logo: "/images/clients/indusgo.svg", dark: true, work: "#work-indusgo", instagram: "https://www.instagram.com/indusgo.in/" },
+  { id: "palette", name: "Palette Hotels & Resorts", logo: "/images/clients/palette.webp", wide: true },
+  { id: "kalliyath", name: "Kalliyath TMT", logo: "/images/clients/kalliyath.webp", instagram: "https://www.instagram.com/kalliyathgroup/" },
   { id: "florid", name: "Florid Luxury Mattress", logo: "/images/clients/florid.webp", dark: true, tile: "#01192a" },
-  { id: "homework", name: "Homework Living", logo: "/images/clients/homework.webp", instagram: "https://www.instagram.com/homeworkliving/" },
+  { id: "nakshatraonline", name: "Nakshatra Online", logo: "/images/clients/nakshatraonline.webp" },
+  { id: "arabianfashion", name: "Arabian Fashion Jewellery", logo: "/images/clients/arabianfashion.webp", square: true, dark: true, tile: "#5c120f" },
+  { id: "vedic", name: "Vedic Village Kodungallur", logo: "/images/clients/vedic.webp", square: true },
   { id: "vanitemonde", name: "Vanité Monde", logo: "/images/clients/vanitemonde.webp", square: true },
-  { id: "kamal", name: "Kamal Agencies", logo: "/images/clients/kamal.webp", instagram: "https://www.instagram.com/kamalagencieskodungallur/" },
   { id: "drumstick", name: "Drumstick Metro Eats", logo: "/images/clients/drumstick.webp", dark: true, tile: "#24b24b" },
-  { id: "zephyr", name: "Zephyr Windows & Doors", instagram: "https://www.instagram.com/zephyrwindowsanddoors/" },
   { id: "akhilavinod", name: "Dr Akhila Vinod Yogashram", logo: "/images/clients/akhilavinod.webp" },
   { id: "livendo", name: "Livendo", logo: "/images/clients/livendo.webp", square: true },
+
+  // Last row.
+  { id: "kamal", name: "Kamal Agencies", logo: "/images/clients/kamal.webp", instagram: "https://www.instagram.com/kamalagencieskodungallur/" },
+  { id: "zephyr", name: "Zephyr Windows & Doors", instagram: "https://www.instagram.com/zephyrwindowsanddoors/" },
+  { id: "homework", name: "Homework Living", logo: "/images/clients/homework.webp", instagram: "https://www.instagram.com/homeworkliving/" },
+  { id: "marketcity", name: "Marketcity Mall", instagram: "https://www.instagram.com/marketcity_mall/" },
+  { id: "channel27", name: "Channel 27", logo: "/images/clients/channel27.webp", square: true },
+  { id: "marikar", name: "Marikar Interiors", logo: "/images/clients/marikar.webp" },
 ];
 
 export const proof = [

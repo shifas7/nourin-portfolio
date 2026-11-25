@@ -27,7 +27,11 @@ function Logo({ c }: { c: Client }) {
         alt={c.name}
         fill
         unoptimized={c.logo.endsWith(".svg")}
-        sizes="(min-width: 1280px) 200px, (min-width: 1024px) 22vw, (min-width: 640px) 30vw, 45vw"
+        sizes={
+          c.wide
+            ? "(min-width: 1400px) 440px, (min-width: 1024px) 32vw, (min-width: 640px) 60vw, 90vw"
+            : "(min-width: 1400px) 220px, (min-width: 1024px) 16vw, (min-width: 640px) 30vw, 45vw"
+        }
         className="object-contain"
       />
     </span>
@@ -52,17 +56,21 @@ export default function Clients() {
         <h2 id="clients-title" className="text-[15px] text-muted">
           Brands I&apos;ve worked with
         </h2>
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        {/* Wide tiles span two columns so the 25 logos fill whole rows. They take
+            their height from the regular tiles beside them, except on phones,
+            where a wide tile has a row to itself and needs its own ratio. Dense
+            flow backfills any gap a wide tile leaves at narrower widths. */}
+        <ul className="mt-6 grid grid-flow-row-dense grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {clients.map((c) => {
             const href = c.work ?? c.instagram;
             const external = !c.work && !!c.instagram;
-            const tile = `group relative flex aspect-[3/2] flex-col items-center justify-center rounded-[20px] px-3 ring-1 sm:px-6 transition-[transform,box-shadow] duration-300 ease-out-expo ${
+            const tile = `group relative flex h-full flex-col items-center justify-center rounded-[20px] px-3 ring-1 sm:px-6 transition-[transform,box-shadow] duration-300 ease-out-expo ${
               c.dark ? "bg-[#0d0d0d] ring-white/10" : "bg-white ring-black/5"
             }`;
             const style = c.tile ? { backgroundColor: c.tile } : undefined;
             const label = c.work ? "See the work" : "Instagram";
             return (
-              <li key={c.id}>
+              <li key={c.id} className={c.wide ? "col-span-2 aspect-[3/1] sm:aspect-auto" : "aspect-[3/2]"}>
                 {href ? (
                   <a
                     style={style}
